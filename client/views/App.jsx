@@ -4,9 +4,7 @@ export default class App extends React.Component{
   render(){
     return(
       <div>
-        <h1>
-          嘿嘿嘿
-        </h1>
+      eosini 1
       </div>
     )
   }
