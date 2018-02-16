@@ -1,5 +1,5 @@
 import React from 'react'
-
+import NavBar from '../views/layout/navbar'
 import Routes from '../config/router'
 export default class App extends React.Component{
   componentDidMount(){
@@ -8,9 +8,7 @@ export default class App extends React.Component{
   render(){
     return(
     <div>
-    <div>
-      componentOK
-      </div>
+      <NavBar/>
       <Routes/>
     </div>
     
