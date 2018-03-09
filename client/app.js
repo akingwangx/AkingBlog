@@ -10,7 +10,8 @@ const theme = createMuiTheme({
     primary: lightBlue,
     accent: pink,
     type: 'light'
-  }
+  },
+  
 })
 const root = document.getElementById('root')
 const render = Component => {
