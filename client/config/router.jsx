@@ -1,6 +1,6 @@
 import React from 'react'
 import { Route, Switch} from 'react-router-dom'
-import IndexPage from '../components/indexPage'
+import IndexPage from '../components/indexPage/indexPage'
 import FeaturesPage from '../components/featuresPage'
 import App from '../views/App'
 export default () => [

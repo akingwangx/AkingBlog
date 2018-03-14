@@ -5,9 +5,19 @@ import { AppContainer } from 'react-hot-loader'
 import { BrowserRouter } from 'react-router-dom'
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
 import { lightBlue, pink } from 'material-ui/colors'
+
+
 const theme = createMuiTheme({
   palette: {
-    primary: lightBlue,
+    primary: 
+    {
+      light: '#757ce8',
+      main: '#29B6F6',
+      dark: '#039BE5',
+    },
+    secondary:{
+      main:'#0321E5'
+    },
     accent: pink,
     type: 'light'
   },
