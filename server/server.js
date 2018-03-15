@@ -2,10 +2,13 @@ const express = require('express')
 const ReactSSR = require('react-dom/server')
 const fs = require('fs')
 const path = require('path')
-
+const Post =require('../models/post')
 const isDev = process.env.NODE_ENV === "development"
 const app = express()
-
+Post.create({title:'wangxin'})
+Post.findOne({},(err,doc)=>{
+  console.log(doc)
+})
 // if (!isDev) {
 //   const serverEntry = require('../dist/server-entry').default
 //   const template = fs.readFileSync(path.join(__dirname, '../dist/index.html'), 'utf8')
@@ -19,6 +22,7 @@ const app = express()
 //   const devStatic=require('../util/dev-static')
 //   devStatic(app)
 // }
+
 app.listen(3333, function () {
   console.log('启动3333端口')
 })

@@ -30,9 +30,8 @@ const config = {
           path.join(__dirname, '../node_modules')
         ]
       }
-    ]
-   
-    
+    ],
+  
   },
   plugins: [
     new HTMLPlugin({

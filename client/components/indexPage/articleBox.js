@@ -160,8 +160,6 @@ class ArticleBox extends React.Component {
             value={value}
             onChange={this.handleChange}
             indicatorColor='primary'
-          
-
           >
             <Tab style={{ fontWeight: 'bold' }} label='全部'></Tab>
             <Tab style={{ fontWeight: 'bold' }} label='分享'></Tab>

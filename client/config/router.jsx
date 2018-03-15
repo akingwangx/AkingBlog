@@ -1,14 +1,44 @@
 import React from 'react'
-import { Route, Switch} from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch, } from 'react-router-dom'
+import { AnimatedSwitch } from 'react-router-transition'
+import { withStyles } from 'material-ui/styles'
+import NavBar from '../views/layout/navbar'
 import IndexPage from '../components/indexPage/indexPage'
 import FeaturesPage from '../components/featuresPage'
-import App from '../views/App'
-export default () => [
+const styles ={
+    switch: {
+        position: 'relative',
+        '&>div':{
+            position:'absolute'
+        }
+      },
+    
+}
+class Routes extends React.Component{
+    render(){
+        const {classes}=this.props
+        return (
+           <NavBar>
+            <AnimatedSwitch
+                    atEnter={{ opacity: 0 }}
+                    atLeave={{ opacity: 0 }}
+                    atActive={{ opacity: 1 }}
+                    className={classes.switch}
+                >
+                <Route path="/" exact component={IndexPage} />
+                <Route path="/featuresPage" component={FeaturesPage} />
+                </AnimatedSwitch>
+            </NavBar>
+        )
+    }
+}
+export default withStyles(styles)(Routes) 
 
-    <Route path="/" exact component={IndexPage} key="indexPage" />,
-    <Route path="/featuresPage" exact component={FeaturesPage} key="featuresPage" />
 
 
 
-]
+
+
+
+
 
