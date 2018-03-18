@@ -63,17 +63,16 @@ const styles = theme => ({
 class UserCard extends React.Component {
   render() {
     const { classes } = this.props
-
     return (
       <Paper className={classes.paper} elevation={1}>
         <View className={classes.header} ></View>
         <View className={classes.content}>
           <Avatar
-            src='https://pbs.twimg.com/profile_images/963377968029384704/F5Iwm31y_bigger.jpg'
+            src='http://ovwvaynot.bkt.clouddn.com/touxiang.jpg'
             className={classes.avatar}
           />
           <Typography variant='title' className={classes.title}>
-            Aking王鑫
+           {this.props.nickname}
         </Typography>
           <View style={{ flexDirection: 'row', marginTop: '20px',justifyContent:'space-between' }}>
             <View style={{flexDirection:'row',}}>
@@ -97,7 +96,7 @@ class UserCard extends React.Component {
            
 
             <Button color="primary" variant="raised" className={classes.btn}>
-              发推
+              发博
             </Button>
           </View>
         </View>

@@ -41,7 +41,7 @@ const styles = theme => ({
 })
 class AttentionBox extends React.Component {
   constructor(props) {
-    super()
+    super(props)
   }
 
   render() {

@@ -18,7 +18,8 @@ export default class App extends React.Component {
       <Switch>
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
-          <Route path="/" component={Routes} />    
+          {/* <Route path="/" component={Routes} />     */}
+          <Routes/>
       </Switch>
     )
   }

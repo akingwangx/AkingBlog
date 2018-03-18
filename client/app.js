@@ -3,10 +3,12 @@ import ReactDOM from 'react-dom'
 import App from './views/App'
 import { AppContainer } from 'react-hot-loader'
 import { BrowserRouter } from 'react-router-dom'
+import thunk from 'redux-thunk'
+import {createStore,applyMiddleware,compose} from 'redux'
+import {Provider} from 'react-redux'
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
 import { lightBlue, pink } from 'material-ui/colors'
-
-
+import reducers from './reducer'
 const theme = createMuiTheme({
   palette: {
     primary: 
@@ -16,22 +18,29 @@ const theme = createMuiTheme({
       dark: '#039BE5',
     },
     secondary:{
-      main:'#0321E5'
+      main:'#2196F3'
     },
     accent: pink,
     type: 'light'
   },
   
 })
+const store=createStore(reducers,compose(
+  applyMiddleware(thunk),
+  window.devToolsExtension?window.devToolsExtension():f=>f
+))
+
 const root = document.getElementById('root')
 const render = Component => {
   ReactDOM.render(
     <AppContainer>
+      <Provider  store={store}>
       <BrowserRouter>
         <MuiThemeProvider theme={theme}>
           <Component />
         </MuiThemeProvider>
       </BrowserRouter>
+      </Provider>
     </AppContainer>,
     root
   )

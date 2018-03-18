@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { withStyles } from 'material-ui/styles'
+import {withRouter,Redirect} from 'react-router-dom'
 import { View } from 'react-web-dom'
 import classNames from 'classnames'
 import Reboot from 'material-ui/Reboot'
@@ -12,16 +13,17 @@ import SearchBar from 'material-ui-search-bar'
 import Avatar from 'material-ui/Avatar'
 import Button from 'material-ui/Button'
 import Tooltip from 'material-ui/Tooltip'
+import Menu, { MenuItem } from 'material-ui/Menu';
 import WbAuto from 'material-ui-icons/WbAuto'
 import SpeakerNotes from 'material-ui-icons/SpeakerNotes'
 import Notifications from 'material-ui-icons/Notifications'
 import PersonAdd from 'material-ui-icons/PersonAdd'
-
-
+import { connect } from 'react-redux'
+import { userinfo } from '../../redux/user/user.redux'
+import browserCookie from 'browser-cookies'
 const styles = {
   root: {
     width: '100%',
-
   },
   logo: {
     width: 40,
@@ -48,11 +50,12 @@ const styles = {
   },
   avatar: {
     margin: 10,
-    width: 60,
-    height: 60,
+    width: 55,
+    height: 55,
     border: '1px solid #eee',
     marginLeft: 30,
     cursor: 'pointer',
+    background: ''
   },
   login: {
     cursor: 'pointer',
@@ -61,17 +64,51 @@ const styles = {
       color: '#03a9f4',
     },
     marginRight: '55px'
+  },
+  loginSpan: {
+    fontSize: '15px',
+    marginRight: '55px',
   }
 }
 class NavBar extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      anchorEl: null
+    }
+    this.handleClick = this.handleClick.bind(this)
+    this.handleClose = this.handleClose.bind(this)
+    this.skipUserInfo=this.skipUserInfo.bind(this)
+    this.logout=this.logout.bind(this)
+  }
+  componentDidMount() {
+    this.props.userinfo()
+  }
+  handleClick(event) {
+    this.setState({
+      anchorEl: event.currentTarget
+    })
 
   }
+  handleClose() {
+    this.setState({ anchorEl: null })
+  }
+  skipUserInfo(){
+    this.setState({ anchorEl: null })
+    this.props.history.push('/userinfo')    
+  }
+  logout(){
+    this.setState({ anchorEl: null })
+    browserCookie.erase('userid')
+    window.location.href=window.location.href
+  }
+  
   render() {
-    const { classes } = this.props
+    const { classes, avatar, nickname,redirectTO } = this.props
+    const { anchorEl } = this.state
     return (
       <div className={classes.root}>
+   
         <AppBar position="fixed" color="inherit">
           <Toolbar style={{ minHeight: 80, }}>
             <Typography variant="title" color="inherit">
@@ -111,25 +148,44 @@ class NavBar extends React.Component {
             <Tooltip title="添加好友" placement="bottom">
               <PersonAdd className={classes.icon} style={{ color: '#CD7FE2', marginRight: '80px' }} />
             </Tooltip>
+            {this.props.isAuth ?
+              <Tooltip title="个人资料与账号" placement="bottom-end">
+                <View className={classes.row}>
+                  <Avatar
+                    alt={this.props.nickname}
+                    src={avatar ? avatar : null}
+                    className={classes.avatar}
+                    onClick={this.handleClick}
+                  >
+                    {avatar ? null : nickname[0]}
+                  </Avatar>
+                </View>
+              </Tooltip> :
+              <View style={{ flexDirection: "row" }}>
+                <Link to="/login" style={{ textDecoration: 'none' }}>
+                  <Typography className={classes.login}>登录</Typography>
+                </Link>
+                <Link to="/register" style={{ textDecoration: 'none' }}>
+                  <Typography className={classes.login}>注册</Typography>
+                </Link>
 
-            {/* <Tooltip title="个人资料与账号" placement="bottom-end">
-            <View className={classes.row}>
-              <Avatar
-                alt="aking"
-                src="https://pbs.twimg.com/profile_images/963377968029384704/F5Iwm31y_400x400.jpg"
-                className={classes.avatar}
-              />
-            </View>
-            </Tooltip> */}
-            <View style={{ flexDirection: "row" }}>
-              <Link to="/login" style={{ textDecoration: 'none' }}>
-                <Typography className={classes.login}>登录</Typography>
-              </Link>
-              <Link to="/register" style={{ textDecoration: 'none' }}>
-                <Typography className={classes.login}>注册</Typography>
-              </Link>
+              </View>
+            }
+            <Menu
+              id="simple-menu"
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={this.handleClose}
+            >
+              <MenuItem onClick={this.skipUserInfo}>
+                <Typography className={classes.loginSpan}>个人资料</Typography>
+              </MenuItem>
+              <MenuItem onClick={this.logout}>
+                <Typography className={classes.loginSpan}>注销</Typography>
+              </MenuItem>
 
-            </View>
+            </Menu>
+
           </Toolbar>
         </AppBar>
 
@@ -137,10 +193,11 @@ class NavBar extends React.Component {
           style={{
             background: '#e6ecf0',
             minHeight: '1000px',
+            width:"100%",
             marginTop: '80px',
           }}
         >
-        <Reboot />
+          <Reboot />
           {this.props.children}
         </div>
       </div>
@@ -152,6 +209,9 @@ class NavBar extends React.Component {
 
 NavBar.propTypes = {
   classes: PropTypes.object.isRequired,
-};
+}
 
-export default withStyles(styles)(NavBar);
+const mapStateToProps = state => {
+  return state.user
+}
+export default connect(mapStateToProps, { userinfo })(withRouter(withStyles(styles)(NavBar))) 
