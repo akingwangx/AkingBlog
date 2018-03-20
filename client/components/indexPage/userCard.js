@@ -5,6 +5,7 @@ import { withStyles } from 'material-ui/styles'
 import Avatar from 'material-ui/Avatar'
 import Typography from 'material-ui/Typography'
 import Button from 'material-ui/Button'
+
 const styles = theme => ({
   paper: {
     padding: theme.spacing.unit * 2,
@@ -20,7 +21,7 @@ const styles = theme => ({
     background: '#4FC3F7',
   },
   content: {
-  padding:'0 16px 0 16px'
+    padding: '0 16px 0 16px'
   },
   avatar: {
     width: '72px',
@@ -29,6 +30,7 @@ const styles = theme => ({
     cursor: 'pointer',
     top: '72px',
     left: '15px',
+    border: '2px solid #fff'
   },
   title: {
     fontSize: '18px',
@@ -43,7 +45,7 @@ const styles = theme => ({
     alignItems: 'center',
     marginRight: '40px',
     cursor: 'pointer',
-    marginLeft:'15px'
+    marginLeft: '15px'
   },
   dataHover: {
     fontWeight: '700',
@@ -57,43 +59,56 @@ const styles = theme => ({
     height: '30px',
     borderRadius: '21px',
     color: '#fff',
-
+    fontWeight: 'bold',
   },
 })
 class UserCard extends React.Component {
   render() {
-    const { classes } = this.props
+
+    const { classes, avatar, history } = this.props
     return (
       <Paper className={classes.paper} elevation={1}>
         <View className={classes.header} ></View>
         <View className={classes.content}>
           <Avatar
-            src='http://ovwvaynot.bkt.clouddn.com/touxiang.jpg'
+            src={avatar ? avatar : null}
             className={classes.avatar}
-          />
-          <Typography variant='title' className={classes.title}>
-           {this.props.nickname}
-        </Typography>
-          <View style={{ flexDirection: 'row', marginTop: '20px',justifyContent:'space-between' }}>
-            <View style={{flexDirection:'row',}}>
-            <View className={classes.data}>
-              <Typography className={classes.dataHover}>
-                文章
+            onClick={() => {
+              history.push('/userinfo')
+            }}
+          >
+            {avatar ? null : nickname[0]}
+          </Avatar>
+          <Typography
+            variant='title'
+            className={classes.title}
+            onClick={() => {
+              history.push('/userinfo')
+            }}
+
+          >
+            {this.props.nickname}
+          </Typography>
+          <View style={{ flexDirection: 'row', marginTop: '20px', justifyContent: 'space-between' }}>
+            <View style={{ flexDirection: 'row', }}>
+              <View className={classes.data}>
+                <Typography className={classes.dataHover}>
+                  文章
               </Typography>
-              <Typography color="primary" style={{ fontWeight: 'bold' }}>
-                0
+                <Typography color="primary" style={{ fontWeight: 'bold' }}>
+                  0
               </Typography>
+              </View>
+              <View className={classes.data}>
+                <Typography className={classes.dataHover}>
+                  正在关注
+              </Typography>
+                <Typography color="primary" style={{ fontWeight: 'bold' }}>
+                  23
+              </Typography>
+              </View>
             </View>
-            <View className={classes.data}>
-              <Typography className={classes.dataHover}>
-                正在关注
-              </Typography>
-              <Typography color="primary" style={{ fontWeight: 'bold' }}>
-                23
-              </Typography>
-            </View>
-            </View>
-           
+
 
             <Button color="primary" variant="raised" className={classes.btn}>
               发博

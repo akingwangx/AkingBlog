@@ -2,17 +2,28 @@ import React from 'react'
 import { withStyles } from 'material-ui/styles'
 import { View } from 'react-web-dom'
 import { connect } from 'react-redux'
-import { userinfo } from '../redux/user/user.redux'
+import { userinfo, uploadImg } from '../redux/user/user.redux'
 import Avatar from 'material-ui/Avatar'
 import Typography from 'material-ui/Typography'
 import Button from 'material-ui/Button'
 import Paper from 'material-ui/Paper'
 import Reboot from 'material-ui/Reboot'
 import Grid from 'material-ui/Grid'
+import Tooltip from 'material-ui/Tooltip'
 import AttentionBox from '../components/indexPage/attentionBox'
 import ArticleBox from '../components/indexPage/ArticleBox'
 import TopicBox from '../components/indexPage/TopicBox'
 import UserCard from '../components/indexPage/UserCard'
+import DateRange from 'material-ui-icons/DateRange'
+import Dialog, {
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from 'material-ui/Dialog'
+import AvatarEditor from 'react-avatar-editor'
+import { UploadField, Uploader } from '@navjobs/upload'
+
 const list = [
   {
     name: '王鑫',
@@ -47,11 +58,9 @@ const list = [
 ]
 const styles = theme => ({
   paper: {
-    padding: theme.spacing.unit * 2,
-    color: theme.palette.text.secondary,
-    minHeight: '212px',
-    padding: '0',
-    position: 'relative'
+    padding: '0px',
+    position: 'relative',
+
   },
   header: {
     width: '100%',
@@ -59,58 +68,109 @@ const styles = theme => ({
     background: '#4FC3F7',
   },
   content: {
-    padding: '0 16px 0 16px',
-
+    padding: '0 146px 0 16px',
+    flexDirection: 'row'
   },
   avatar: {
+  },
+  data: {
+    alignItems: 'center',
+    marginRight: '40px',
+    cursor: 'pointer',
+    marginLeft: '15px',
+    height: '100%',
+    borderBottom: '2px solid #fff',
+    '&:hover': {
+      color: '#03A9F4',
+      borderBottom: '2px solid #03A9F4'
+    },
+    fontWeight: '700',
+    color: ' #616161',
+  },
+  btn: {
+    width: '105px',
+    height: '30px',
+    borderRadius: '21px',
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  title: {
+    fontSize: '20px',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    '&:hover': {
+      textDecoration: 'underline',
+    },
+    marginBottom: '15px'
+
+  },
+  span: {
+    fontSize: '13px',
+    cursor: 'pointer',
+    color: '#898d8d',
+    '&:hover': {
+      textDecoration: 'underline',
+    },
+    marginBottom: '8px',
+  },
+  upload: {
     width: '180px',
     height: '180px',
     position: 'absolute',
     cursor: 'pointer',
     top: '72px',
     left: '100px',
-  },
-  title: {
-    fontSize: '18px',
-    fontWeight: 'bold',
-    margin: '5px 80px',
-    cursor: 'pointer',
+    background: '#4FC3F7',
+    border: '6px solid #fff',
+    borderRadius: '90px',
     '&:hover': {
-      textDecoration: 'underline',
+      border: '6px solid #FFAB40'
     },
-  },
-  data: {
+    display: 'flex',
+    justifyContent: 'center',
     alignItems: 'center',
-    marginRight: '40px',
-    cursor: 'pointer',
-    marginLeft: '15px'
-  },
-  dataHover: {
-    fontWeight: '700',
-    color: ' #616161',
-    '&:hover': {
-      color: '#03A9F4',
-    }
-  },
-  btn: {
-    width: '75px',
-    height: '30px',
-    borderRadius: '21px',
-    color: '#fff',
   }
 })
 
 class UserInfoPage extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      open: false,
+      image: "",
+      position: { x: 0.5, y: 0.5 },
+      borderRadius: 0,
+      preview: null,
+      width: 200,
+      height: 200,
+    }
   }
+
   componentDidMount = () => {
     this.props.userinfo()
   }
 
-  render() {
-    const { classes } = this.props
 
+  handleClose = () => {
+    this.setState({ open: false })
+  }
+  handleSave = data => {
+    const img = this.editor.getImageScaledToCanvas().toDataURL()
+    const rect = this.editor.getCroppingRect()
+    this.props.uploadImg(img, { user: this.props.user })
+    this.setState({ open: false })
+
+  }
+
+  setEditorRef = editor => {
+    if (editor) this.editor = editor
+  }
+  handlePositionChange = position => {
+    this.setState({ position })
+  }
+
+  render() {
+    const { classes, avatar, nickname, user, createdate } = this.props
     return (
       <div className={classes.root}>
         <Grid
@@ -122,57 +182,125 @@ class UserInfoPage extends React.Component {
         >
           <Grid item xs={12} sm={12} >
             <Paper className={classes.paper} elevation={1}>
-              <View className={classes.header} ></View>
+              <View className={classes.header} >  <Tooltip title={avatar ? nickname : "添加头像"} placement="right">
+                <UploadField
+                  onFiles={files => { this.setState({ open: true, image: files[0] }) }}
+                  containerProps={{
+                    className: classes.upload
+                  }}
+                >
+                  <img
+                    src={avatar ? avatar : 'http://ovwvaynot.bkt.clouddn.com/owner_empty_avatar.png'}
+                  />
+                </UploadField>
+              </Tooltip>
+              </View>
               <View className={classes.content}>
-                <Avatar
-                  src='http://ovwvaynot.bkt.clouddn.com/touxiang.jpg'
-                  className={classes.avatar}
-                />
-                <Typography variant='title' className={classes.title}>
-                  {this.props.nickname}
-                </Typography>
-                <View style={{ flexDirection: 'row', marginTop: '20px', justifyContent: 'space-between' }}>
-                  <View style={{ flexDirection: 'row', }}>
+                <Dialog
+                  open={this.state.open}
+                  onClose={this.handleClose}
+                >
+                  <DialogTitle style={{ borderBottom: '1px solid #e6ecf0' }}>{"调整你的照片位置和尺寸"}</DialogTitle>
+                  <DialogContent style={{ padding: '15px' }}>
+                    <View style={{ width: '500px', height: '350px', flexDirection: 'row' }}>
+                      <AvatarEditor
+                        ref={this.setEditorRef}
+                        width={168}
+                        height={168}
+                        onPositionChange={this.handlePositionChange}
+                        border={80}
+                        borderRadius={100}
+                        color={[255, 255, 255, 0.3]} // RGBA
+                        image={this.state.image}
+                        scale={1}
+                        crossOrigin="anonymous"
+                      />
+                    </View>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button className={classes.btn} variant='raised' onClick={this.handleClose} color='primary'>
+                      取消
+                    </Button>
+                    <Button
+                      className={classes.btn}
+                      variant='raised'
+                      autoFocus
+                      color='primary'
+                      onClick={this.handleSave}
+                    >
+                      应用
+                  </Button>
+                  </DialogActions>
+                </Dialog>
+                <View style={{ flexDirection: 'row', marginTop: '20px' }}>
+                  <View style={{ flexDirection: 'row', margin: '0 640px 0 400px' }}>
                     <View className={classes.data}>
-                      <Typography className={classes.dataHover}>
+                      <span >
                         文章
-              </Typography>
-                      <Typography color="primary" style={{ fontWeight: 'bold' }}>
+                      </span>
+                      <span >
                         0
-              </Typography>
+                      </span>
                     </View>
                     <View className={classes.data}>
-                      <Typography className={classes.dataHover}>
+                      <span >
                         正在关注
-              </Typography>
-                      <Typography color="primary" style={{ fontWeight: 'bold' }}>
+                      </span>
+                      <span >
                         23
-              </Typography>
+                     </span>
                     </View>
                   </View>
 
 
                   <Button color="primary" variant="raised" className={classes.btn}>
                     发博
-            </Button>
+                 </Button>
                 </View>
               </View>
             </Paper>
-
-
           </Grid>
           <Grid item xs={12} sm={3}>
-            <AttentionBox list={list} />
+            <View style={{ margin: '25px 0 0 95px', }}>
+              <span className={classes.title}>
+                {nickname}
+              </span>
+              <span className={classes.span}>
+                {`@${user}`}
+              </span>
+              <span className={classes.span}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <DateRange></DateRange>
+                  {`加入于${createdate.slice(0, 10)}`}
+                </View>
+              </span>
+            </View>
+
           </Grid>
           <Grid item xs={12} sm={5}>
-            <ArticleBox list={list} />
+            <View style={{ marginTop: '20px', fontFamily: 'adelle-sans' }}>
+              <span className={classes.title}>
+                文章列表
+              </span>
+              <p>
+                你还没发表过文章哦
+              </p>
+              <View>
+                {/* <Typography variant='title'>
+                  Parcel Vs Webpack
+                </Typography>
+               
+                <span> Posted by xxx on 2017-12-27</span> */}
+              </View>
+            </View>
           </Grid>
           <Grid item xs={12} sm={3}>
             <TopicBox list={list} />
+            <AttentionBox list={list} />
           </Grid>
 
         </Grid>
-      </div>
+      </div >
 
     )
   }
@@ -181,4 +309,4 @@ const mapStateToProps = state => {
   return state.user
 
 }
-export default connect(mapStateToProps, { userinfo })(withStyles(styles)(UserInfoPage))
+export default connect(mapStateToProps, { userinfo, uploadImg })(withStyles(styles)(UserInfoPage))

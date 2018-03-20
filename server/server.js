@@ -20,7 +20,7 @@ const app = express()
 app.use(cookieParser())
 app.use(bodyParser.json())
 app.use('/api/user',userRouter)
-
+// app.use(express.static(path.join(__dirname, 'server')));
 app.listen(3333, function () {
   console.log('启动3333端口')
 })

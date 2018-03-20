@@ -11,6 +11,7 @@ import TopicBox from '../components/indexPage/TopicBox'
 import UserCard from '../components/indexPage/UserCard'
 import {connect} from 'react-redux'
 import {userinfo} from '../redux/user/user.redux.js'
+import InputRange from 'react-input-range'
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -56,6 +57,7 @@ const list = [
 class IndexPage extends React.Component {
   constructor(props) {
     super(props)
+
   }
   componentDidMount = () => {
     this.props.userinfo()
@@ -78,7 +80,11 @@ class IndexPage extends React.Component {
             <Grid item xs={12} sm={3} >
               {
                 this.props.isAuth?
-                <UserCard nickname={this.props.nickname}/>:null             
+                <UserCard 
+                nickname={this.props.nickname}
+                avatar={this.props.avatar}
+                history={this.props.history}
+                />:null             
               }
               <AttentionBox list={list} />
             </Grid>

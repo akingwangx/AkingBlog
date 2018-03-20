@@ -6,7 +6,8 @@ var UserSchema=new Schema({
   nickname:{type:String,require:true},
   password:{type:String,require:true},
   type:{type:String,require:true},
-  avatar:{type:String}
+  avatar:{type:String},
+  createdate: { type: Date, default: Date.now }
 
 })
 module.exports=mongoose.model('User',UserSchema)

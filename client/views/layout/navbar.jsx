@@ -112,7 +112,13 @@ class NavBar extends React.Component {
         <AppBar position="fixed" color="inherit">
           <Toolbar style={{ minHeight: 80, }}>
             <Typography variant="title" color="inherit">
-              <WbAuto className={classes.logo} color="primary" />
+              <Link to='/'>
+              <WbAuto 
+              className={classes.logo}
+               color="primary"
+                />
+              </Link>
+        
             </Typography>
             <SearchBar
               onChange={() => console.log('onChange')}
@@ -192,7 +198,7 @@ class NavBar extends React.Component {
         <div
           style={{
             background: '#e6ecf0',
-            minHeight: '1000px',
+            minHeight: '900px',
             width:"100%",
             marginTop: '80px',
           }}
