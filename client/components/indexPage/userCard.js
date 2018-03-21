@@ -61,10 +61,10 @@ const styles = theme => ({
     color: '#fff',
     fontWeight: 'bold',
   },
+
 })
 class UserCard extends React.Component {
   render() {
-
     const { classes, avatar, history } = this.props
     return (
       <Paper className={classes.paper} elevation={1}>
@@ -85,7 +85,6 @@ class UserCard extends React.Component {
             onClick={() => {
               history.push('/userinfo')
             }}
-
           >
             {this.props.nickname}
           </Typography>
@@ -110,7 +109,14 @@ class UserCard extends React.Component {
             </View>
 
 
-            <Button color="primary" variant="raised" className={classes.btn}>
+            <Button 
+            color="primary" 
+            variant="raised" 
+            className={classes.btn}
+            onClick={()=>{
+              this.props.history.push('/editArticle')
+            }}
+            >
               发博
             </Button>
           </View>

@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { withStyles } from 'material-ui/styles'
-import {withRouter,Redirect} from 'react-router-dom'
+import { withRouter, Redirect } from 'react-router-dom'
 import { View } from 'react-web-dom'
 import classNames from 'classnames'
 import Reboot from 'material-ui/Reboot'
@@ -21,6 +21,7 @@ import PersonAdd from 'material-ui-icons/PersonAdd'
 import { connect } from 'react-redux'
 import { userinfo } from '../../redux/user/user.redux'
 import browserCookie from 'browser-cookies'
+import { LinearProgress } from 'material-ui/Progress'
 const styles = {
   root: {
     width: '100%',
@@ -55,7 +56,6 @@ const styles = {
     border: '1px solid #eee',
     marginLeft: 30,
     cursor: 'pointer',
-    background: ''
   },
   login: {
     cursor: 'pointer',
@@ -74,51 +74,69 @@ class NavBar extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      anchorEl: null
+      anchorEl: null,
+      completed: 0,
+      buffer: 10,
+    
     }
     this.handleClick = this.handleClick.bind(this)
     this.handleClose = this.handleClose.bind(this)
-    this.skipUserInfo=this.skipUserInfo.bind(this)
-    this.logout=this.logout.bind(this)
+    this.skipUserInfo = this.skipUserInfo.bind(this)
+    this.logout = this.logout.bind(this)
   }
   componentDidMount() {
     this.props.userinfo()
+    this.timer = setTimeout(this.progress, 500)
+  
+   
   }
+  componentWillUnmount() {
+    clearInterval(this.timer)
+  }
+  timer = null
   handleClick(event) {
     this.setState({
       anchorEl: event.currentTarget
     })
-
+  }
+  progress = () => {
+    const { completed } = this.state;
+    if (completed === 100) {
+      this.setState({ completed: 0 });
+    } else {
+      const diff = Math.random() * 10;
+      this.setState({ completed: Math.min(completed + diff, 100) });
+    }
   }
   handleClose() {
     this.setState({ anchorEl: null })
   }
-  skipUserInfo(){
+  skipUserInfo() {
     this.setState({ anchorEl: null })
-    this.props.history.push('/userinfo')    
+    this.props.history.push('/userinfo')
   }
-  logout(){
+  logout() {
     this.setState({ anchorEl: null })
     browserCookie.erase('userid')
-    window.location.href=window.location.href
+    window.location.href = window.location.href
   }
-  
+
   render() {
-    const { classes, avatar, nickname,redirectTO } = this.props
-    const { anchorEl } = this.state
+    const { classes, avatar, nickname, redirectTO } = this.props
+    const { anchorEl,completed, buffer } = this.state
     return (
       <div className={classes.root}>
-   
+
         <AppBar position="fixed" color="inherit">
           <Toolbar style={{ minHeight: 80, }}>
             <Typography variant="title" color="inherit">
               <Link to='/'>
-              <WbAuto 
-              className={classes.logo}
-               color="primary"
+                <WbAuto
+                  className={classes.logo}
+                  color="primary"
                 />
               </Link>
-        
+
             </Typography>
             <SearchBar
               onChange={() => console.log('onChange')}
@@ -183,8 +201,17 @@ class NavBar extends React.Component {
               open={Boolean(anchorEl)}
               onClose={this.handleClose}
             >
-              <MenuItem onClick={this.skipUserInfo}>
+            <MenuItem onClick={this.skipUserInfo}>
                 <Typography className={classes.loginSpan}>个人资料</Typography>
+              </MenuItem>
+              <MenuItem >
+                <Typography 
+                className={classes.loginSpan}
+                onClick={()=>{
+                  this.setState({ anchorEl: null })
+                  this.props.history.push('/editArticle')
+                }}
+                >发布文章</Typography>
               </MenuItem>
               <MenuItem onClick={this.logout}>
                 <Typography className={classes.loginSpan}>注销</Typography>
@@ -195,17 +222,28 @@ class NavBar extends React.Component {
           </Toolbar>
         </AppBar>
 
-        <div
-          style={{
+        <View
+          style={this.props.location.pathname!=('/editArticle')?
+          {
             background: '#e6ecf0',
             minHeight: '900px',
-            width:"100%",
+            width:'100&',
             marginTop: '80px',
-          }}
+          }:
+          {
+            background: '#fff',
+            minHeight: '100%',
+            width:'100&',
+            marginTop: '80px',
+          }
+          }
         >
+       
+
           <Reboot />
+          {/* <LinearProgress color='secondary' style={{background:'#eee'}} value={completed} /> */}
           {this.props.children}
-        </div>
+        </View>
       </div>
 
     )

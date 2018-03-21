@@ -21,10 +21,10 @@ const theme = createMuiTheme({
       main:'#2196F3'
     },
     accent: pink,
-    type: 'light'
+    type: 'light',
   },
-  
-})
+}
+)
 const store=createStore(reducers,compose(
   applyMiddleware(thunk),
   window.devToolsExtension?window.devToolsExtension():f=>f

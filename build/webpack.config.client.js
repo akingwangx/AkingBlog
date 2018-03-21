@@ -1,4 +1,3 @@
-
 const path = require('path')
 const webpack = require('webpack')
 const HTMLPlugin = require('html-webpack-plugin')
@@ -29,7 +28,9 @@ const config = {
         exclude: [
           path.join(__dirname, '../node_modules')
         ]
-      }
+      },
+      { test: /\.css$/,
+         use: ['style-loader','css-loader'] },
     ],
   
   },

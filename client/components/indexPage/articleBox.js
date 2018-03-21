@@ -162,7 +162,7 @@ class ArticleBox extends React.Component {
             indicatorColor='primary'
           >
             <Tab style={{ fontWeight: 'bold' }} label='全部'></Tab>
-            <Tab style={{ fontWeight: 'bold' }} label='分享'></Tab>
+            <Tab style={{ fontWeight: 'bold' }} label='分享'></Tab> 
             <Tab style={{ fontWeight: 'bold' }} label='精选'></Tab>
           </Tabs>
         </AppBar>

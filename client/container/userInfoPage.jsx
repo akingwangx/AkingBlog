@@ -11,7 +11,6 @@ import Reboot from 'material-ui/Reboot'
 import Grid from 'material-ui/Grid'
 import Tooltip from 'material-ui/Tooltip'
 import AttentionBox from '../components/indexPage/attentionBox'
-import ArticleBox from '../components/indexPage/ArticleBox'
 import TopicBox from '../components/indexPage/TopicBox'
 import UserCard from '../components/indexPage/UserCard'
 import DateRange from 'material-ui-icons/DateRange'
@@ -23,7 +22,9 @@ import Dialog, {
 } from 'material-ui/Dialog'
 import AvatarEditor from 'react-avatar-editor'
 import { UploadField, Uploader } from '@navjobs/upload'
-
+import UserInfo from '../components/userinfoPage/userinfo'
+import ArticleInfo from '../components/userinfoPage/articleinfo'
+import Header from '../components/userinfoPage/userinfoHeader'
 const list = [
   {
     name: '王鑫',
@@ -56,81 +57,6 @@ const list = [
 
   }
 ]
-const styles = theme => ({
-  paper: {
-    padding: '0px',
-    position: 'relative',
-
-  },
-  header: {
-    width: '100%',
-    height: '160px',
-    background: '#4FC3F7',
-  },
-  content: {
-    padding: '0 146px 0 16px',
-    flexDirection: 'row'
-  },
-  avatar: {
-  },
-  data: {
-    alignItems: 'center',
-    marginRight: '40px',
-    cursor: 'pointer',
-    marginLeft: '15px',
-    height: '100%',
-    borderBottom: '2px solid #fff',
-    '&:hover': {
-      color: '#03A9F4',
-      borderBottom: '2px solid #03A9F4'
-    },
-    fontWeight: '700',
-    color: ' #616161',
-  },
-  btn: {
-    width: '105px',
-    height: '30px',
-    borderRadius: '21px',
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  title: {
-    fontSize: '20px',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    '&:hover': {
-      textDecoration: 'underline',
-    },
-    marginBottom: '15px'
-
-  },
-  span: {
-    fontSize: '13px',
-    cursor: 'pointer',
-    color: '#898d8d',
-    '&:hover': {
-      textDecoration: 'underline',
-    },
-    marginBottom: '8px',
-  },
-  upload: {
-    width: '180px',
-    height: '180px',
-    position: 'absolute',
-    cursor: 'pointer',
-    top: '72px',
-    left: '100px',
-    background: '#4FC3F7',
-    border: '6px solid #fff',
-    borderRadius: '90px',
-    '&:hover': {
-      border: '6px solid #FFAB40'
-    },
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  }
-})
 
 class UserInfoPage extends React.Component {
   constructor(props) {
@@ -172,7 +98,6 @@ class UserInfoPage extends React.Component {
   render() {
     const { classes, avatar, nickname, user, createdate } = this.props
     return (
-      <div className={classes.root}>
         <Grid
           container
           spacing={0}
@@ -181,126 +106,21 @@ class UserInfoPage extends React.Component {
           justify='space-around'
         >
           <Grid item xs={12} sm={12} >
-            <Paper className={classes.paper} elevation={1}>
-              <View className={classes.header} >  <Tooltip title={avatar ? nickname : "添加头像"} placement="right">
-                <UploadField
-                  onFiles={files => { this.setState({ open: true, image: files[0] }) }}
-                  containerProps={{
-                    className: classes.upload
-                  }}
-                >
-                  <img
-                    src={avatar ? avatar : 'http://ovwvaynot.bkt.clouddn.com/owner_empty_avatar.png'}
-                  />
-                </UploadField>
-              </Tooltip>
-              </View>
-              <View className={classes.content}>
-                <Dialog
-                  open={this.state.open}
-                  onClose={this.handleClose}
-                >
-                  <DialogTitle style={{ borderBottom: '1px solid #e6ecf0' }}>{"调整你的照片位置和尺寸"}</DialogTitle>
-                  <DialogContent style={{ padding: '15px' }}>
-                    <View style={{ width: '500px', height: '350px', flexDirection: 'row' }}>
-                      <AvatarEditor
-                        ref={this.setEditorRef}
-                        width={168}
-                        height={168}
-                        onPositionChange={this.handlePositionChange}
-                        border={80}
-                        borderRadius={100}
-                        color={[255, 255, 255, 0.3]} // RGBA
-                        image={this.state.image}
-                        scale={1}
-                        crossOrigin="anonymous"
-                      />
-                    </View>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button className={classes.btn} variant='raised' onClick={this.handleClose} color='primary'>
-                      取消
-                    </Button>
-                    <Button
-                      className={classes.btn}
-                      variant='raised'
-                      autoFocus
-                      color='primary'
-                      onClick={this.handleSave}
-                    >
-                      应用
-                  </Button>
-                  </DialogActions>
-                </Dialog>
-                <View style={{ flexDirection: 'row', marginTop: '20px' }}>
-                  <View style={{ flexDirection: 'row', margin: '0 640px 0 400px' }}>
-                    <View className={classes.data}>
-                      <span >
-                        文章
-                      </span>
-                      <span >
-                        0
-                      </span>
-                    </View>
-                    <View className={classes.data}>
-                      <span >
-                        正在关注
-                      </span>
-                      <span >
-                        23
-                     </span>
-                    </View>
-                  </View>
-
-
-                  <Button color="primary" variant="raised" className={classes.btn}>
-                    发博
-                 </Button>
-                </View>
-              </View>
-            </Paper>
+            <Header {...this.props}/>
           </Grid>
           <Grid item xs={12} sm={3}>
-            <View style={{ margin: '25px 0 0 95px', }}>
-              <span className={classes.title}>
-                {nickname}
-              </span>
-              <span className={classes.span}>
-                {`@${user}`}
-              </span>
-              <span className={classes.span}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <DateRange></DateRange>
-                  {`加入于${createdate.slice(0, 10)}`}
-                </View>
-              </span>
-            </View>
-
+          <UserInfo {...this.props}/>
           </Grid>
           <Grid item xs={12} sm={5}>
-            <View style={{ marginTop: '20px', fontFamily: 'adelle-sans' }}>
-              <span className={classes.title}>
-                文章列表
-              </span>
-              <p>
-                你还没发表过文章哦
-              </p>
-              <View>
-                {/* <Typography variant='title'>
-                  Parcel Vs Webpack
-                </Typography>
-               
-                <span> Posted by xxx on 2017-12-27</span> */}
-              </View>
-            </View>
+          <ArticleInfo {...this.props}/>
           </Grid>
           <Grid item xs={12} sm={3}>
-            <TopicBox list={list} />
-            <AttentionBox list={list} />
+            <TopicBox {...this.props} list={list} />
+            <AttentionBox {...this.props} list={list} />
           </Grid>
 
         </Grid>
-      </div >
+
 
     )
   }
@@ -309,4 +129,4 @@ const mapStateToProps = state => {
   return state.user
 
 }
-export default connect(mapStateToProps, { userinfo, uploadImg })(withStyles(styles)(UserInfoPage))
+export default connect(mapStateToProps, { userinfo, uploadImg })(UserInfoPage)

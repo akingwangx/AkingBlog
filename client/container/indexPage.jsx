@@ -1,7 +1,6 @@
 import React from 'react'
 import Reboot from 'material-ui/Reboot'
 import PropTypes from 'prop-types'
-import { withStyles } from 'material-ui/styles'
 import Typography from 'material-ui/Typography'
 import Grid from 'material-ui/Grid'
 import Paper from 'material-ui/Paper'
@@ -9,19 +8,10 @@ import AttentionBox from '../components/indexPage/attentionBox'
 import ArticleBox from '../components/indexPage/ArticleBox'
 import TopicBox from '../components/indexPage/TopicBox'
 import UserCard from '../components/indexPage/UserCard'
-import {connect} from 'react-redux'
-import {userinfo} from '../redux/user/user.redux.js'
+import { connect } from 'react-redux'
+import { userinfo } from '../redux/user/user.redux.js'
 import InputRange from 'react-input-range'
-const styles = theme => ({
-  root: {
-    flexGrow: 1,
-  },
-  paper: {
-    padding: theme.spacing.unit * 2,
-    color: theme.palette.text.secondary,
-    marginTop: '15px'
-  },
-})
+
 const list = [
   {
     name: '王鑫',
@@ -57,50 +47,47 @@ const list = [
 class IndexPage extends React.Component {
   constructor(props) {
     super(props)
-
   }
   componentDidMount = () => {
     this.props.userinfo()
-
   }
-  
   render() {
-    const { classes } = this.props
-
+    console.log(this.props)
     return (
-      
-        <div className={classes.root}>
-          <Grid
-            container
-            spacing={0}
-            alignItems='flex-start'
-            direction='row'
-            justify='space-around'
-          >
-            <Grid item xs={12} sm={3} >
-              {
-                this.props.isAuth?
-                <UserCard 
-                nickname={this.props.nickname}
-                avatar={this.props.avatar}
-                history={this.props.history}
-                />:null             
-              }
-              <AttentionBox list={list} />
-            </Grid>
-            <Grid item xs={12} sm={5}>
-              <ArticleBox list={list} />
-            </Grid>
-            <Grid item xs={12} sm={3}>
-              <TopicBox list={list} />
-            </Grid>
+      <Grid
+        container
+        spacing={0}
+        alignItems='flex-start'
+        direction='row'
+        justify='space-around'
+      >
+        <Grid item xs={12} sm={3} >
+          {
+            this.props.isAuth ?
+              <UserCard
+                {...this.props}
+              /> : null
+          }
+          <AttentionBox
+            {...this.props}
+            list={list} />
+        </Grid>
+        <Grid item xs={12} sm={5}>
+          <ArticleBox
+            {...this.props}
+            list={list} />
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <TopicBox
+            {...this.props}
+            list={list} />
+        </Grid>
+      </Grid>
 
-          </Grid>
-        </div>
     )
   }
 }
-const mapStateToProps=state=>{
+const mapStateToProps = state => {
   return state.user
 }
-export default connect(mapStateToProps,{userinfo})(withStyles(styles)(IndexPage)) 
+export default connect(mapStateToProps, { userinfo })(IndexPage)

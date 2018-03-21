@@ -6,6 +6,7 @@ import NavBar from '../views/layout/navbar'
 import IndexPage from '../container/indexPage'
 import FeaturesPage from '../container/featuresPage'
 import UserInfoPage from '../container/userInfoPage'
+import EditArticlePage from '../container/editArticlePage.js'
 const styles ={
     switch: {
         position: 'relative',
@@ -28,7 +29,8 @@ class Routes extends React.Component{
                 >
                 <Route path="/" exact component={IndexPage} />                
                 <Route path="/featuresPage" component={FeaturesPage} /> 
-                <Route path="/userInfo" component={UserInfoPage} />                                     
+                <Route path="/userInfo" component={UserInfoPage} />     
+                <Route path="/editArticle" component={EditArticlePage}/>                      
                 </AnimatedSwitch>
             </NavBar>
         )
