@@ -7,7 +7,7 @@ var PostSchema=new Schema({
   postContent:{type:String,required:true},
   // category:{type:Schema.Types.ObjectId,ref:"",required:true},//种类
   author:{type:Schema.Types.ObjectId,ref:"User"},
-  comments: [{ body: String, date: Date, }],
+  comments: [{}],
   likedCount:{type:Number,default:0},
   viewCount:{type:Number,default:0},
   createday:{type:Date,default: Date.now},//创建时间

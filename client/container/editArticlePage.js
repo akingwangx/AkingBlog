@@ -90,7 +90,7 @@ class EditArticlePage extends React.Component {
     this.handleSave = this.handleSave.bind(this)
   }
   componentDidMount() {
-    this.refs.editor.focus();
+    this.editor.focus();
   }
   handleSave() {
     const post = convertToRaw(this.state.editorState.getCurrentContent())
@@ -134,7 +134,7 @@ class EditArticlePage extends React.Component {
             <Paper className={classes.paper}>
 
               <Editor
-                ref="editor"
+                ref={(input) => { this.editor = input}}
                 editorState={editorState}
                 onChange={this.onChange}
                 placeholder='开始你的写作,首行默认为标题'

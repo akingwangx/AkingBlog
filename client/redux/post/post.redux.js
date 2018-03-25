@@ -4,6 +4,7 @@ const UPLOAD_SUCCESS = 'UPLOAD_SUCCESS' //文章上传
 const GETPOST_SUCCESS = 'GETPOST_SUCCESS'//取文章
 const LOAD_POST = 'LOAD_POST'           //显示文章
 const GETALLPOST_SUCCESS = 'GETALLPOST_SUCCESS' //取全部文章
+const ADDCOMMENTS_SUCCESS='ADDCOMMENTS_SUCCESS'            //添加评论
 const initState = {
   postTitle: '',//文章标题
   author: {},//作者信息
@@ -11,7 +12,7 @@ const initState = {
   redirectTO: '',//跳转路径
   createday: '',//文章发表日期
   category: '',//文章分类
-  comment: '',//评论内容
+  comments: '',//评论内容
   likedCount: 0,//点赞数
   viewCount: 0,//阅读数,
   html: '',
@@ -30,6 +31,8 @@ export function post(state = initState, action) {
       return { ...state,isLoading:false, postList:action.payload}
     case GETPOST_SUCCESS:
     return {...state,redirectTO: '/postPage',...action.payload}
+    case ADDCOMMENTS_SUCCESS:
+    return {...state,isLoading:false,comments:action.comments}
     default:
       return state
   }
@@ -45,6 +48,9 @@ function loadPost(data) {
 }
 function getAllPostSuccess(data){
   return {type:GETALLPOST_SUCCESS,payload:data}
+}
+function addCommentsSuccess(data){
+  return {type:ADDCOMMENTS_SUCCESS,comments:data}
 }
 export function uploadPost(html, userid, title, content) {
   return dispatch => {
@@ -95,4 +101,14 @@ return dispatch=>{
     }
   })
 }
+}
+export function addComments(nickname,avatar,content){
+  return dispatch=>{
+    axios.post('/api/post/addcomments',{nickname,avatar,content}).
+    then(res=>{
+      if(res.status==200&&res.data.code===0){
+        console.log('comm',res.data.data)
+      }
+    })
+  }
 }

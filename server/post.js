@@ -23,7 +23,7 @@ Router.post('/upload', (req, res) => {
 Router.get('/postinfo', (req, res) => {
   const { postid } = req.cookies
   if (!postid) {
-    return res.json({ code: 1,msg:'!postid' })
+    return res.json({ code: 1, msg: '!postid' })
   }
   PostModel.findOne({ _id: postid }).populate('author').exec(function (err, doc) {
     if (err) {
@@ -49,13 +49,41 @@ Router.get('/allpost', (req, res) => {
 
 Router.get('/getpost', (req, res) => {
 
-  PostModel.findOne({_id:req.query.id}).populate('author').exec(function (err, doc) {
+  PostModel.findOne({ _id: req.query.id }).populate('author').exec(function (err, doc) {
     if (err) {
       return res.json({ code: 1, msg: '后端出错' })
     }
-    res.cookie('postid', doc._id)
-    return res.json({ code: 0, data: doc })
+    PostModel.update({ _id: req.query.id }, { '$set': { viewCount: doc.viewCount + 1 } }, (function (err, docs) {
+      if (err) {
+        return res.json({ code: 1, msg: '出错' })
+      }
+      console.log(docs)
+      res.cookie('postid', doc._id)
+      return res.json({ code: 0, data: doc })
+    }))
+
   })
 })
 
+Router.post('/addcomments',(req,res)=>{
+  console.log(req.body)
+  
+  PostModel.findOne({ _id: req.cookies.postid }).populate('author').exec(function (err, doc) {
+    if (err) {
+      return res.json({ code: 1, msg: '后端出错' })
+    }
+    let comment={
+      nickname:req.body.nickname,
+      avatar:req.body.avatar,
+      creatd:new Date(),
+      content:req.body.content
+    }
+    doc.comments.unshift(comment)
+    doc.save(function(err,docs){
+      if(!err){
+        return res.json({code:0,data:doc.comments})
+      }
+    })
+})
+})
 module.exports = Router

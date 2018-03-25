@@ -37,7 +37,6 @@ const styles = theme => ({
     borderRadius: '21px',
     color: '#fff',
     fontWeight: 'bold',
-    
   }
 })
 class AttentionBox extends React.Component {

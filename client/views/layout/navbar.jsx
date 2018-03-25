@@ -82,6 +82,7 @@ class NavBar extends React.Component {
     super(props)
     this.state = {
       anchorEl: null,
+      loading:true
     }
     this.handleClick = this.handleClick.bind(this)
     this.handleClose = this.handleClose.bind(this)
@@ -93,10 +94,10 @@ class NavBar extends React.Component {
     setTimeout(
       () => {
         this.setState({
-          loading: true
+          loading: false
         })
       }
-      , 1500)
+      , 500)
   }
   componentWillUnmount() {
 
@@ -249,9 +250,10 @@ class NavBar extends React.Component {
 
           <Reboot />
           {this.state.loading ?
-            this.props.children
-            :
             <LinearProgress color='primary' style={{ background: '#eee' }} />
+            :
+            
+            this.props.children
           }
 
 

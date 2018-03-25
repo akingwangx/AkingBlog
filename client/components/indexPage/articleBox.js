@@ -147,7 +147,7 @@ class ArticleBox extends React.Component {
               <View style={{ flexDirection: 'row' }}>
                 <View className={classes.iconHover1} style={{ flexDirection: 'row' }}>
                   <Visibility className={classes.icon}></Visibility>
-                  <Typography style={{ marginRight: '25px', color: '#7d7e7e' }}>1</Typography>
+                  <Typography style={{ marginRight: '25px', color: '#7d7e7e' }}>{item.viewCount}</Typography>
                 </View>
                 <View className={classes.iconHover2} style={{ flexDirection: 'row' }}>
                   <Textsms className={classes.icon}></Textsms>

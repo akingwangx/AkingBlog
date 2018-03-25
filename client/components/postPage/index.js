@@ -1,7 +1,7 @@
 import React from 'react'
 import { View } from 'react-web-dom'
 import { connect } from 'react-redux'
-import { postinfo } from '../../redux/post/post.redux'
+import { postinfo, addComments } from '../../redux/post/post.redux'
 import { convertToRaw } from 'draft-js';
 import { Editor, createEditorState } from 'medium-draft';
 import mediumDraftImporter from 'medium-draft/lib/importer';
@@ -21,6 +21,9 @@ import Edit from 'material-ui-icons/Edit'
 import Textsms from 'material-ui-icons/Textsms'
 import OpenInNew from 'material-ui-icons/OpenInNew'
 import { Redirect } from 'react-router-dom'
+import TextField from 'material-ui/TextField'
+import { CircularProgress } from 'material-ui/Progress'
+import Card, { CardHeader, CardMedia, CardContent, CardActions } from 'material-ui/Card'
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -42,6 +45,7 @@ const styles = theme => ({
     marginTop: '15px',
     minHeight: '800px',
     marginBottom: '20px'
+
   },
   btnGroup: {
     position: 'fixed',
@@ -56,45 +60,143 @@ const styles = theme => ({
   },
   fab: {
     width: '85px'
+  },
+  comment: {
+    flexDirection: 'column',
+    padding: '15px 40px 10px 24px',
+    margin: '40px 0 30px 75px',
+    background: '#E1F5FE',
+    borderRadius: '10px',
+    border: '1px solid #eee',
+    width: '80%'
+  },
+  textField: {
+    width: '90%',
+    marginLeft: '10px',
+    borderRadius: '8px',
+    border: '2px solid #fff',
+    '&:focus': {
+      outline: 'none',
+      border: '2px solid #B3E5FC'
+    },
+    fontSize: '14px',
+    fontFamily: "sans-serif",
+  },
+  btn: {
+    marginTop: '20px',
+    width: '75px',
+    height: '30px',
+    borderRadius: '21px',
+    color: '#fff',
+    fontWeight: 'bold',
+    alignSelf: 'flex-end',
+  },
+  card: {
+    borderBottom: '1px solid #eee',
+    padding: '11px 30px',
+
   }
 
 })
 
 
 @connect(
-  state => state.post,
-  { postinfo }
+  state => state,
+  { postinfo, addComments }
 )
 class PostPage extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      commentValue: '',
+      isloading:true,
+    }
   }
   componentDidMount = () => {
     this.props.postinfo()
+    setTimeout(()=>{
+      this.setState({
+        isloading:false,
+      })
+    },500)
+  
   }
-  componentWillMount=()=>{
-    window.scrollTo(0,0)
+  componentWillMount = () => {
+    window.scrollTo(0, 0)
+  }
+  handleChange = (event) => {
+    this.setState({
+      commentValue: event.target.value
+    })
+  }
+  handleClick = () => {
+    this.props.addComments(this.props.user.nickname, this.props.user.avatar, this.state.commentValue)
+    window.location.href = window.location.href
+
   }
   render() {
     const { classes } = this.props
     return (
-
       <View className={classes.root}>
+      {this.props.post.redirectTO ? <Redirect to={this.props.post.redirectTO} /> : null}
         <Grid container spacing={0}>
           <Grid item xs={12}>
             <Paper className={classes.paper}>
               <View style={{ flexDirection: "row", alignItems: 'center', marginBottom: '10px' }}>
-                <Avatar src={this.props.author.avatar} />
+                <Avatar src={this.props.post.author.avatar} />
                 <View style={{ marginLeft: '10px' }}>
                   <Typography variant="title" className={classes.name}>
-                    {this.props.author.nickname}
-                </Typography>
+                    {this.props.post.author.nickname}
+                  </Typography>
                   <Typography style={{ fontSize: '14px', color: '#7d7e7e' }}>
-                    { `发布于${this.props.createday.slice(0, 10)}`}
+                    {`发布于${this.props.post.createday.slice(0, 10)}`}
                   </Typography>
                 </View>
               </View>
-              <div style={{padding:'0 25px'}} dangerouslySetInnerHTML={{ __html: this.props.html }} />
+              <div style={{ padding: '0 25px' }} dangerouslySetInnerHTML={{ __html: this.props.post.html }} />
+
+              <View className={classes.comment}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: '20px' }}>
+                  <Avatar src={this.props.user.avatar} />
+                  <textarea
+                    placeholder='请发表评论'
+                    className={classes.textField}
+                    rows="5"
+                    ref={(input) => { this.comment = input }}
+                    onChange={this.handleChange}
+                    value={this.state.commentValue}
+                  ></textarea>
+                </View>
+                <Button
+                  color='primary'
+                  variant="raised"
+                  className={classes.btn}
+                  onClick={this.handleClick}
+                >发表</Button>
+              </View>
+               {
+                 this.state.isloading?
+                 <CircularProgress className={classes.progress} size={50} />
+                 :
+                this.props.post.comments.map((item, index) => {
+            return <div className={classes.card} key={index}>
+                    <CardHeader
+                      avatar={
+                        <Avatar src={item.avatar} />
+                      }
+                      style={{ paddingBottom: 0 }}
+                      title={item.nickname}
+                      subheader={item.creatd}
+                    />
+                    <CardContent>
+                      <Typography component="p">
+                        {item.content}
+                      </Typography>
+                    </CardContent>
+                  </div>
+                })
+              } 
+
             </Paper>
 
 
@@ -118,6 +220,9 @@ class PostPage extends React.Component {
               aria-label="textsms"
               className={classes.button}
               style={{ background: '#63BD70' }}
+              onClick={() => {
+                this.comment.focus()
+              }}
             >
               <Textsms />
             </Button>
