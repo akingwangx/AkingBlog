@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux'
 import {user }from './redux/user/user.redux'
-export default combineReducers({
-  user
-})
+import {post} from './redux/post/post.redux'
+export default combineReducers({user,post})

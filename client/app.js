@@ -9,6 +9,7 @@ import {Provider} from 'react-redux'
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
 import { lightBlue, pink } from 'material-ui/colors'
 import reducers from './reducer'
+// import './config/loading'
 const theme = createMuiTheme({
   palette: {
     primary: 
@@ -16,9 +17,11 @@ const theme = createMuiTheme({
       light: '#757ce8',
       main: '#29B6F6',
       dark: '#039BE5',
+      contrastText: '#fff',
     },
     secondary:{
-      main:'#2196F3'
+      main:'#2196F3',
+      contrastText: '#000',
     },
     accent: pink,
     type: 'light',

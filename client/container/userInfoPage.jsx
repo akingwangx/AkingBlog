@@ -28,7 +28,7 @@ import Header from '../components/userinfoPage/userinfoHeader'
 const list = [
   {
     name: '王鑫',
-    avatar: 'https://pbs.twimg.com/profile_images/963377968029384704/F5Iwm31y_bigger.jpg',
+    avatar: 'https://cdn.v2ex.com/avatar/9e33/4886/34829_normal.png?m=1361709603',
     intro: ' Paper can be used to builds',
     title: 'Grayson Allen',
     article: 'I was taking a walk around my neighborhood, smoking a cigarette and crossed the street. When I was in the middle of the crosswalk, I heard brakes lock up and a small car slammed into me. I was pretty strong, a commercial fisherman, and not really hurt. A young woman stuck her head out the window. She h',
@@ -104,17 +104,18 @@ class UserInfoPage extends React.Component {
           alignItems='flex-start'
           direction='row'
           justify='space-around'
+          style={{background: '#e6ecf0',minHeight:900}}
         >
           <Grid item xs={12} sm={12} >
             <Header {...this.props}/>
           </Grid>
-          <Grid item xs={12} sm={3}>
+          <Grid item xs={12} sm={3} style={{marginTop:'-100px'}}>
           <UserInfo {...this.props}/>
           </Grid>
-          <Grid item xs={12} sm={5}>
+          <Grid item xs={12} sm={5} style={{marginTop:'-100px'}}>
           <ArticleInfo {...this.props}/>
           </Grid>
-          <Grid item xs={12} sm={3}>
+          <Grid item xs={12} sm={3} style={{marginTop:'-100px'}}>
             <TopicBox {...this.props} list={list} />
             <AttentionBox {...this.props} list={list} />
           </Grid>

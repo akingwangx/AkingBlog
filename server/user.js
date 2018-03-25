@@ -6,13 +6,13 @@ const cookie = require('cookie-parser')
 const bodyParser = require('body-parser')
 const Router = express.Router()
 const UserModel = require('./../models/user')
-const fs=require('fs')
+const fs = require('fs')
 
-var createFolder = function(folder) {
+var createFolder = function (folder) {
   try {
-      fs.accessSync(folder);
+    fs.accessSync(folder);
   } catch (e) {
-      fs.mkdirSync(folder);
+    fs.mkdirSync(folder);
   }
 };
 
@@ -21,11 +21,11 @@ var uploadFolder = '../client/image';
 createFolder(uploadFolder)
 
 var storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-      cb(null, uploadFolder)
+  destination: function (req, file, cb) {
+    cb(null, uploadFolder)
   },
-  filename: function(req, file, cb) {
-      cb(null, file.originalname)
+  filename: function (req, file, cb) {
+    cb(null, file.originalname)
   }
 })
 var upload = multer({ storage: storage })
@@ -57,7 +57,6 @@ Router.post('/register', (req, res) => {
   })
 })
 Router.post('/login', (req, res) => {
-  console.log(req.body)
   const { user, password } = req.body
   //第二个参数password:0是让返回中不显示
   UserModel.findOne({ user: user, password: utils.md5(password) }, { password: 0 }, (err, doc) => {
@@ -92,11 +91,10 @@ Router.get('/info', (req, res) => {
 
 Router.post('/upload', upload.single('file'), (req, res) => {
   const file = req.file
-  console.log('file',file)
   const { userid } = req.cookies
-  UserModel.update({'_id':userid},{'$set':{avatar:file.path}},function(err,doc){
-    if(!err){
-      return   res.json({ code: 0, file: file.path })
+  UserModel.update({ '_id': userid }, { '$set': { avatar: file.path } }, function (err, doc) {
+    if (!err) {
+      return res.json({ code: 0, file: file.path })
     }
   })
   // UserModel.findOne({ _id: userid }, (err, doc) => {
@@ -104,7 +102,7 @@ Router.post('/upload', upload.single('file'), (req, res) => {
   //     console.log("doc",doc)
   //     doc.create({ avatar: file.path })
   //   }
-   
+
   // })
 
 

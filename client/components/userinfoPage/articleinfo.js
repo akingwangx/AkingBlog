@@ -7,6 +7,10 @@ import Paper from 'material-ui/Paper'
 import { withStyles } from 'material-ui/styles'
 
 const styles = theme => ({
+  paper: {
+    padding: theme.spacing.unit * 2,
+    minHeight:"120px"
+  },
   title: {
     fontSize: '20px',
     fontWeight: 'bold',
@@ -27,7 +31,8 @@ class ArctileInfo extends React.Component {
   render() {
     const { classes } = this.props
     return (
-      <View style={{ marginTop: '20px', fontFamily: 'adelle-sans' }}>
+      <View style={{ marginTop: '15px', fontFamily: 'adelle-sans' }}>
+        <Paper className={classes.paper} elevation={1}>
         <span className={classes.title}>
           文章列表
         </span>
@@ -41,6 +46,8 @@ class ArctileInfo extends React.Component {
                
                 <span> Posted by xxx on 2017-12-27</span> */}
         </View>
+        </Paper>
+      
       </View>
     )
   }

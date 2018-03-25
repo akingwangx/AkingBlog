@@ -13,6 +13,7 @@ const initState = {
   avatar: '',
   isAuth: false,
   createdate: '',
+  isLoading:true,
 }
 export function user(state = initState, action) {
   switch (action.type) {
@@ -21,7 +22,7 @@ export function user(state = initState, action) {
     case LOGIN_SUCCESS:
       return { ...state, msg: '', isAuth: true, redirectTO: '/', ...action.payload }
     case LOAD_DATA:
-      return { ...state, isAuth: true, ...action.payload }
+      return { ...state, isAuth: true,isLoading:false, ...action.payload }
     case LOGOUT_SUBMIT:
       return { ...state, redirectTO: '/login' }
     case CHANGE_IMG:

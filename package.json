@@ -9,7 +9,8 @@
     "dev:client": "cross-env NODE_ENV=development webpack-dev-server --config build/webpack.config.client.js",
     "dev:server": "cross-env NODE_ENV=development node server/server.js",
     "clear": "rimraf dist",
-    "build": "npm run clear && npm run build:client && npm run build:server"
+    "build": "npm run clear && npm run build:client && npm run build:server",
+    "eject": "react-scripts eject"
   },
   "author": "aking",
   "license": "ISC",
@@ -23,6 +24,7 @@
     "draft-js": "^0.10.5",
     "eslint-loader": "^1.9.0",
     "express": "^4.16.2",
+    "immutable": "^3.8.2",
     "material-ui": "^1.0.0-beta.33",
     "material-ui-icons": "^1.0.0-beta.17",
     "material-ui-search-bar": "^1.0.0-beta.4",

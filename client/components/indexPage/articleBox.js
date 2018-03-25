@@ -12,8 +12,9 @@ import Whatshot from 'material-ui-icons/Whatshot'
 import Tabs, { Tab } from 'material-ui/Tabs'
 import AppBar from 'material-ui/AppBar'
 // import Close from 'material-ui-icons/Close'
-
-
+import {getPost} from '../../redux/post/post.redux'
+import {connect} from 'react-redux'
+import { Redirect } from 'react-router-dom'
 const styles = theme => ({
   root: {
     '&:first-child': {
@@ -29,6 +30,7 @@ const styles = theme => ({
   },
   appbar: {
     marginTop: theme.spacing.unit * 2,
+    width:"100%",
   },
   avatar: {
     cursor: 'pointer'
@@ -36,6 +38,7 @@ const styles = theme => ({
   name: {
     fontSize: '15px',
     fontWeight: '600',
+    color:'#595959',
   },
   title: {
     fontFamily: 'Georgia,Times',
@@ -45,7 +48,7 @@ const styles = theme => ({
     fontSize: '18px',
     cursor: 'pointer',
     marginBottom: '10px',
-    maxWidth: '300px',
+    maxWidth: '500px',
     '&:hover': {
       textDecoration: 'underline'
     }
@@ -91,47 +94,55 @@ const styles = theme => ({
 
 
 });
+@connect(
+  state=>state.post,
+  {getPost}
+)
 class ArticleBox extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       value: 0,
     }
-
   }
   handleChange = (event, value) => {
     this.setState({ value })
   }
+  handleClick=(item)=>{
+    this.props.getPost(item._id)
+  }
   render() {
-    const { classes, list } = this.props
+    const { classes, list,postList,redirectTO} = this.props
     const { value } = this.state
     const articleList =
-      list.map((item, index) => {
+      postList.map((item, index) => {
         return (
-          <Card className={classes.root} key={item.name}>
+          <Card 
+          className={classes.root} 
+          key={item._id}
+          onClick={()=>{this.handleClick(item)}}
+          >
             <Typography variant="title" className={classes.title}>
-              {item.title}
+              {item.postTitle}
             </Typography>
-
-
             <View style={{ flexDirection: 'row' }}>
               <Avatar
                 className={classes.avatar}
                 alt="avatar"
-                src={item.avatar}
+                src={item.author.avatar}
               />
               <View style={{ marginLeft: '10px' }}>
                 <Typography className={classes.name}>
-                  {item.name}
+                  {item.author.nickname}
                 </Typography>
                 <Typography style={{ fontSize: '14px', color: '#7d7e7e' }}>
-                  {item.time}
+                  {`发布于${item.createday.slice(0,10)}`}
                 </Typography>
               </View>
             </View>
             <View style={{ padding: '0 10px' }}>
               <Typography align='left' className={classes.article}>
-                {item.article}
+                {item.postContent}
               </Typography>
               <View style={{ flexDirection: 'row' }}>
                 <View className={classes.iconHover1} style={{ flexDirection: 'row' }}>
@@ -144,7 +155,7 @@ class ArticleBox extends React.Component {
                 </View>
                 <View className={classes.iconHover3} style={{ flexDirection: 'row' }}>
                   <Whatshot className={classes.icon}></Whatshot>
-                  <Typography style={{ marginRight: '25px', color: '#7d7e7e' }}>25</Typography>
+                  <Typography style={{ marginRight: '25px', color: '#7d7e7e' }}>{item.likedCount}</Typography>
                 </View>
               </View>
 
@@ -155,6 +166,7 @@ class ArticleBox extends React.Component {
 
     return (
       <div className={classes.appbar}>
+      {redirectTO ? <Redirect to={redirectTO} /> : null}
         <AppBar position="static" color='inherit'>
           <Tabs
             value={value}
@@ -166,9 +178,10 @@ class ArticleBox extends React.Component {
             <Tab style={{ fontWeight: 'bold' }} label='精选'></Tab>
           </Tabs>
         </AppBar>
-        {
-          articleList
+        {         
+          articleList  
         }
+       
       </div>
 
 

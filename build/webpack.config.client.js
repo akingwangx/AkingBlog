@@ -27,7 +27,10 @@ const config = {
         loader: 'babel-loader',
         exclude: [
           path.join(__dirname, '../node_modules')
-        ]
+        ],
+        query: {
+          plugins: ["transform-decorators-legacy"]
+        }
       },
       { test: /\.css$/,
          use: ['style-loader','css-loader'] },

@@ -9,8 +9,8 @@ import ArticleBox from '../components/indexPage/ArticleBox'
 import TopicBox from '../components/indexPage/TopicBox'
 import UserCard from '../components/indexPage/UserCard'
 import { connect } from 'react-redux'
-import { userinfo } from '../redux/user/user.redux.js'
-import InputRange from 'react-input-range'
+import { userinfo } from '../redux/user/user.redux'
+import {getAllPost} from '../redux/post/post.redux'
 
 const list = [
   {
@@ -42,17 +42,71 @@ const list = [
     tag: '#Francisco Gabriel de Anda',
     time: 'October 14, 2016',
 
+  },
+  {
+    name: '张1',
+    avatar: 'https://pbs.twimg.com/profile_images/672221256419115008/L9y0yHvE_bigger.jpg',
+    intro: ' 哈哈哈哈哈',
+    title: 'React 深入系列2：组件分类',
+    article: '浅谈推进有赞全站 HTTPS 项目-工程篇',
+    tag: '#Francisco Gabriel de Anda',
+    time: 'October 14, 2016',
+
+  },
+  {
+    name: '张2',
+    avatar: 'https://pbs.twimg.com/profile_images/672221256419115008/L9y0yHvE_bigger.jpg',
+    intro: ' 哈哈哈哈哈',
+    title: 'React 深入系列2：组件分类',
+    article: '浅谈推进有赞全站 HTTPS 项目-工程篇',
+    tag: '#Francisco Gabriel de Anda',
+    time: 'October 14, 2016',
+
+  },
+  {
+    name: '张3',
+    avatar: 'https://pbs.twimg.com/profile_images/672221256419115008/L9y0yHvE_bigger.jpg',
+    intro: ' 哈哈哈哈哈',
+    title: 'React 深入系列2：组件分类',
+    article: '浅谈推进有赞全站 HTTPS 项目-工程篇',
+    tag: '#Francisco Gabriel de Anda',
+    time: 'October 14, 2016',
+
+  },
+  {
+    name: '张4',
+    avatar: 'https://pbs.twimg.com/profile_images/672221256419115008/L9y0yHvE_bigger.jpg',
+    intro: ' 哈哈哈哈哈',
+    title: 'React 深入系列2：组件分类',
+    article: '浅谈推进有赞全站 HTTPS 项目-工程篇',
+    tag: '#Francisco Gabriel de Anda',
+    time: 'October 14, 2016',
+
+  },
+  {
+    name: '张5',
+    avatar: 'https://pbs.twimg.com/profile_images/672221256419115008/L9y0yHvE_bigger.jpg',
+    intro: ' 哈哈哈哈哈',
+    title: 'React 深入系列2：组件分类',
+    article: '浅谈推进有赞全站 HTTPS 项目-工程篇',
+    tag: '#Francisco Gabriel de Anda',
+    time: 'October 14, 2016',
+
   }
 ]
+@connect(
+  state => state,
+  { userinfo, getAllPost }
+)
 class IndexPage extends React.Component {
   constructor(props) {
     super(props)
   }
   componentDidMount = () => {
     this.props.userinfo()
+    this.props.getAllPost()
   }
   render() {
-    console.log(this.props)
     return (
       <Grid
         container
@@ -60,26 +114,30 @@ class IndexPage extends React.Component {
         alignItems='flex-start'
         direction='row'
         justify='space-around'
+        style={{ background: '#e6ecf0', minHeight: 900 }}
       >
         <Grid item xs={12} sm={3} >
           {
             this.props.isAuth ?
               <UserCard
-                {...this.props}
+                {...this.props.user}
+                {...this.props.post}
               /> : null
           }
           <AttentionBox
-            {...this.props}
+            {...this.props.user}
+            {...this.props.post}
             list={list} />
         </Grid>
-        <Grid item xs={12} sm={5}>
+        <Grid item xs={12} sm={5} >
           <ArticleBox
-            {...this.props}
-            list={list} />
+            {...this.props.post}
+            list={list} />   
         </Grid>
         <Grid item xs={12} sm={3}>
           <TopicBox
-            {...this.props}
+            {...this.props.user}
+            {...this.props.post}
             list={list} />
         </Grid>
       </Grid>
@@ -87,7 +145,5 @@ class IndexPage extends React.Component {
     )
   }
 }
-const mapStateToProps = state => {
-  return state.user
-}
-export default connect(mapStateToProps, { userinfo })(IndexPage)
+
+export default IndexPage

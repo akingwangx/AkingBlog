@@ -6,37 +6,28 @@ import NavBar from '../views/layout/navbar'
 import IndexPage from '../container/indexPage'
 import FeaturesPage from '../container/featuresPage'
 import UserInfoPage from '../container/userInfoPage'
-import EditArticlePage from '../container/editArticlePage.js'
-const styles ={
-    switch: {
-        position: 'relative',
-        '&>div':{
-            position:'absolute'
-        }
-      },
-    
+import EditArticlePage from '../container/editArticlePage'
+import PostPage from '../components/postPage/index'
+const styles = {
+
+
 }
-class Routes extends React.Component{
-    render(){
-        const {classes}=this.props
+class Routes extends React.Component {
+    render() {
+        const { classes } = this.props
         return (
-           <NavBar>
-            <AnimatedSwitch
-                    atEnter={{ opacity: 0 }}
-                    atLeave={{ opacity: 0 }}
-                    atActive={{ opacity: 1 }}
-                    className={classes.switch}
-                >
-                <Route path="/" exact component={IndexPage} />                
-                <Route path="/featuresPage" component={FeaturesPage} /> 
-                <Route path="/userInfo" component={UserInfoPage} />     
-                <Route path="/editArticle" component={EditArticlePage}/>                      
-                </AnimatedSwitch>
+            <NavBar>
+                <Route path="/" exact component={IndexPage} />
+                <Route path="/featuresPage" component={FeaturesPage} />
+                <Route path="/userInfo" component={UserInfoPage} />
+                <Route path="/editArticle" component={EditArticlePage} />
+                <Route path="/postPage" component={PostPage} />
+
             </NavBar>
         )
     }
 }
-export default withStyles(styles)(Routes) 
+export default withStyles(styles)(Routes)
 
 
 

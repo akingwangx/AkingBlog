@@ -70,14 +70,18 @@ const styles = {
     marginRight: '55px',
   }
 }
+
+@connect(
+  state => state.user,
+  { userinfo }
+)
+@withRouter
+
 class NavBar extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       anchorEl: null,
-      completed: 0,
-      buffer: 10,
-    
     }
     this.handleClick = this.handleClick.bind(this)
     this.handleClose = this.handleClose.bind(this)
@@ -86,28 +90,24 @@ class NavBar extends React.Component {
   }
   componentDidMount() {
     this.props.userinfo()
-    this.timer = setTimeout(this.progress, 500)
-  
-   
+    setTimeout(
+      () => {
+        this.setState({
+          loading: true
+        })
+      }
+      , 1500)
   }
   componentWillUnmount() {
-    clearInterval(this.timer)
+
   }
-  timer = null
+
   handleClick(event) {
     this.setState({
       anchorEl: event.currentTarget
     })
   }
-  progress = () => {
-    const { completed } = this.state;
-    if (completed === 100) {
-      this.setState({ completed: 0 });
-    } else {
-      const diff = Math.random() * 10;
-      this.setState({ completed: Math.min(completed + diff, 100) });
-    }
-  }
+
   handleClose() {
     this.setState({ anchorEl: null })
   }
@@ -118,12 +118,13 @@ class NavBar extends React.Component {
   logout() {
     this.setState({ anchorEl: null })
     browserCookie.erase('userid')
+    browserCookie.erase('postid')
     window.location.href = window.location.href
   }
 
   render() {
     const { classes, avatar, nickname, redirectTO } = this.props
-    const { anchorEl,completed, buffer } = this.state
+    const { anchorEl, completed } = this.state
     return (
       <div className={classes.root}>
 
@@ -150,28 +151,35 @@ class NavBar extends React.Component {
 
             {/* 导航栏 */}
             <Link to="/" style={{ textDecoration: 'none' }}>
-              <Button className={classes.nav} color='primary'>Home</Button>
+              <Button className={classes.nav} color='primary'>首页</Button>
             </Link>
             <Link to="/featuresPage" style={{ textDecoration: 'none' }}>
-              <Button className={classes.nav} color='primary'>features</Button>
+              <Button className={classes.nav} color='primary'>热门</Button>
             </Link>
             <Link to="/node" style={{ textDecoration: 'none' }}>
-              <Button className={classes.nav} color='primary' style={{ marginRight: 110 }}>node</Button>
+              <Button className={classes.nav} color='primary' style={{ marginRight: 110 }}>私信</Button>
             </Link>
             {/* <Link to="/timeLine" style={{textDecoration:'none'}}>
             <Button className={classes.nav} color='primary' style={{marginRight:110}}>timeLine</Button>        
             </Link> */}
 
             {/* 功能按钮 */}
-            <Tooltip title="评论" placement="bottom">
-              <SpeakerNotes className={classes.icon} style={{ color: '#63BD70' }} />
-            </Tooltip>
-            <Tooltip title="通知" placement="bottom">
-              <Notifications className={classes.icon} style={{ color: '#FBAB4A' }} />
-            </Tooltip>
-            <Tooltip title="添加好友" placement="bottom">
-              <PersonAdd className={classes.icon} style={{ color: '#CD7FE2', marginRight: '80px' }} />
-            </Tooltip>
+
+
+            <div>
+              <Tooltip title="评论" placement="bottom">
+                <SpeakerNotes className={classes.icon} style={{ color: '#63BD70' }} />
+              </Tooltip>
+              <Tooltip title="通知" placement="bottom">
+                <Notifications className={classes.icon} style={{ color: '#FBAB4A' }} />
+              </Tooltip>
+              <Tooltip title="添加好友" placement="bottom">
+                <PersonAdd className={classes.icon} style={{ color: '#CD7FE2', marginRight: '80px' }} />
+              </Tooltip>
+            </div>
+
+
+
             {this.props.isAuth ?
               <Tooltip title="个人资料与账号" placement="bottom-end">
                 <View className={classes.row}>
@@ -201,16 +209,16 @@ class NavBar extends React.Component {
               open={Boolean(anchorEl)}
               onClose={this.handleClose}
             >
-            <MenuItem onClick={this.skipUserInfo}>
+              <MenuItem onClick={this.skipUserInfo}>
                 <Typography className={classes.loginSpan}>个人资料</Typography>
               </MenuItem>
               <MenuItem >
-                <Typography 
-                className={classes.loginSpan}
-                onClick={()=>{
-                  this.setState({ anchorEl: null })
-                  this.props.history.push('/editArticle')
-                }}
+                <Typography
+                  className={classes.loginSpan}
+                  onClick={() => {
+                    this.setState({ anchorEl: null })
+                    this.props.history.push('/editArticle')
+                  }}
                 >发布文章</Typography>
               </MenuItem>
               <MenuItem onClick={this.logout}>
@@ -223,26 +231,30 @@ class NavBar extends React.Component {
         </AppBar>
 
         <View
-          style={this.props.location.pathname!=('/editArticle')?
-          {
-            background: '#e6ecf0',
-            minHeight: '900px',
-            width:'100&',
-            marginTop: '80px',
-          }:
-          {
-            background: '#fff',
-            minHeight: '100%',
-            width:'100&',
-            marginTop: '80px',
-          }
+          style={this.props.location.pathname != ('/editArticle') ?
+            {
+              minHeight: '900px',
+              width: '100%',
+              marginTop: '80px',
+            } :
+            {
+              background: '#fff',
+              width: '100%',
+              marginTop: '80px',
+
+            }
           }
         >
-       
+
 
           <Reboot />
-          {/* <LinearProgress color='secondary' style={{background:'#eee'}} value={completed} /> */}
-          {this.props.children}
+          {this.state.loading ?
+            this.props.children
+            :
+            <LinearProgress color='primary' style={{ background: '#eee' }} />
+          }
+
+
         </View>
       </div>
 
@@ -250,12 +262,4 @@ class NavBar extends React.Component {
   }
 }
 
-
-NavBar.propTypes = {
-  classes: PropTypes.object.isRequired,
-}
-
-const mapStateToProps = state => {
-  return state.user
-}
-export default connect(mapStateToProps, { userinfo })(withRouter(withStyles(styles)(NavBar))) 
+export default withStyles(styles)(NavBar) 
