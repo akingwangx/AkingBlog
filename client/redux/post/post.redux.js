@@ -13,8 +13,7 @@ const initState = {
   category: '',//文章分类
   comment: '',//评论内容
   likedCount: 0,//点赞数
-  readCount: 0,//阅读数,
-  // preview: {},
+  viewCount: 0,//阅读数,
   html: '',
   postList:[],
   isLoading:true

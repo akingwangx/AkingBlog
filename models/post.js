@@ -9,6 +9,7 @@ var PostSchema=new Schema({
   author:{type:Schema.Types.ObjectId,ref:"User"},
   comments: [{ body: String, date: Date, }],
   likedCount:{type:Number,default:0},
+  viewCount:{type:Number,default:0},
   createday:{type:Date,default: Date.now},//创建时间
   html:{type:String,required:true}
 })
