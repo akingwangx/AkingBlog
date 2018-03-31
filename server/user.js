@@ -88,6 +88,14 @@ Router.get('/info', (req, res) => {
   })
 
 })
+Router.get('/outheruserinfo',(req,res)=>{
+  UserModel.find({'user':{"$nin":[req.query.user]}},(err,doc)=>{
+    if (err) {
+      return res.json({ code: 1, msg: '后端出错' })
+    }
+    return res.json({code:0,data:doc})
+  })
+})
 
 Router.post('/upload', upload.single('file'), (req, res) => {
   const file = req.file
@@ -104,7 +112,5 @@ Router.post('/upload', upload.single('file'), (req, res) => {
   //   }
 
   // })
-
-
 })
 module.exports = Router

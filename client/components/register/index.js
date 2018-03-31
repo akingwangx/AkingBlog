@@ -14,9 +14,9 @@ import LockOutline from 'material-ui-icons/LockOutline'
 import PersonOutline from 'material-ui-icons/PersonOutline'
 import { connect } from 'react-redux'
 import { register } from '../../redux/user/user.redux'
-import Snackbar from 'material-ui/Snackbar';
-import IconButton from 'material-ui/IconButton';
-import CloseIcon from 'material-ui-icons/Close';
+import Snackbar from 'material-ui/Snackbar'
+import IconButton from 'material-ui/IconButton'
+import CloseIcon from 'material-ui-icons/Close'
 
 const styles = {
   container: {
@@ -26,7 +26,7 @@ const styles = {
   },
   background: {
     width: "100%",
-    height: "734px",
+    height: "100%",
     position: "relative"
   },
   register: {
@@ -57,6 +57,10 @@ const styles = {
     background: '#ff5652'
   }
 }
+@connect(
+  state=>state.user,
+  {register}
+)
 class Register extends React.Component {
   constructor(props) {
     super(props)

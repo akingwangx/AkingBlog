@@ -34,7 +34,8 @@ class UserInfo extends React.Component {
   }
  
   render() {
-    const { classes, nickname, user, createdate } = this.props
+    const { classes,} = this.props
+    const { nickname, user, createdate }=this.props.user
     return (
       <View style={{ margin: '15px 0 0 95px', }}>
         <span className={classes.title}>

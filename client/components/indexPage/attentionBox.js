@@ -5,6 +5,7 @@ import Avatar from 'material-ui/Avatar'
 import Button from 'material-ui/Button'
 import Paper from 'material-ui/Paper'
 import { View } from 'react-web-dom'
+
 const styles = theme => ({
   paper: {
     padding: theme.spacing.unit * 2,
@@ -42,19 +43,23 @@ const styles = theme => ({
 class AttentionBox extends React.Component {
   constructor(props) {
     super(props)
+    this.state={
+      isAttention:false,
+      index:null
+    }
   }
-
   render() {
-    const { classes, list } = this.props
+    const { classes } = this.props
+    const {outherUserList}=this.props.user
     return (
       <Paper className={classes.paper} elevation={1}>
         <Typography variant="title" style={{ fontSize: "18px", fontWeight: '900' }}>
           推荐关注
                  </Typography>
         {
-          list.map((item, index) => {
+          outherUserList.map((item, index) => {
             return (
-              <View className={classes.attentionBox} key={item.name}>
+              <View className={classes.attentionBox} key={item._id}>
                 <View style={{ flexDirection: 'row', }}>
                   <Avatar
                     className={classes.avatar}
@@ -63,16 +68,26 @@ class AttentionBox extends React.Component {
                   />
                   <View style={{ marginLeft: '12px' }}>
                     <Typography variant="title" className={classes.name}>
-                      {item.name}
+                      {item.nickname}
                     </Typography>
                     <Typography style={{ fontSize: '14px', color: '#7d7e7e' }}>
-                      {item.intro}
+                      {`@${item.user}`}
                     </Typography>
                   </View>
                 </View>
 
-                <Button color="primary" variant="raised" className={classes.btn}>
-                  关注
+                <Button 
+                color="primary" 
+                variant="raised" 
+                className={classes.btn}
+                onClick={()=>{
+                 this.setState({
+                   isAttention:!this.state.isAttention,
+                   index:index,
+                 })
+               }}
+                >
+                {this.state.isAttention&&this.state.index==index?'已关注':'关注'}
                </Button>
               </View>
             )

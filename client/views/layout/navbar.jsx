@@ -1,10 +1,8 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link,withRouter, Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { withStyles } from 'material-ui/styles'
-import { withRouter, Redirect } from 'react-router-dom'
 import { View } from 'react-web-dom'
-import classNames from 'classnames'
 import Reboot from 'material-ui/Reboot'
 import AppBar from 'material-ui/AppBar'
 import Toolbar from 'material-ui/Toolbar'
@@ -19,9 +17,10 @@ import SpeakerNotes from 'material-ui-icons/SpeakerNotes'
 import Notifications from 'material-ui-icons/Notifications'
 import PersonAdd from 'material-ui-icons/PersonAdd'
 import { connect } from 'react-redux'
-import { userinfo } from '../../redux/user/user.redux'
+import { userinfo, logoutSubmit } from '../../redux/user/user.redux'
 import browserCookie from 'browser-cookies'
 import { LinearProgress } from 'material-ui/Progress'
+import Grid from 'material-ui/Grid'
 const styles = {
   root: {
     width: '100%',
@@ -30,8 +29,13 @@ const styles = {
     width: 40,
     height: 40,
   },
+  grid: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
   nav: {
-    marginRight: 85,
+    marginRight: 75,
     color: '#000',
     borderRadius: 21,
     '&:hover': {
@@ -50,11 +54,10 @@ const styles = {
     justifyContent: 'center',
   },
   avatar: {
-    margin: 10,
     width: 55,
     height: 55,
     border: '1px solid #eee',
-    marginLeft: 30,
+    marginLeft: 10,
     cursor: 'pointer',
   },
   login: {
@@ -63,17 +66,15 @@ const styles = {
     '&:hover': {
       color: '#03a9f4',
     },
-    marginRight: '55px'
   },
   loginSpan: {
     fontSize: '15px',
-    marginRight: '55px',
   }
 }
 
 @connect(
   state => state.user,
-  { userinfo }
+  { userinfo, logoutSubmit }
 )
 @withRouter
 
@@ -82,7 +83,7 @@ class NavBar extends React.Component {
     super(props)
     this.state = {
       anchorEl: null,
-      loading:true
+      loading: true
     }
     this.handleClick = this.handleClick.bind(this)
     this.handleClose = this.handleClose.bind(this)
@@ -120,90 +121,100 @@ class NavBar extends React.Component {
     this.setState({ anchorEl: null })
     browserCookie.erase('userid')
     browserCookie.erase('postid')
-    window.location.href = window.location.href
+    this.props.logoutSubmit()
+      // window.location.href = window.location.href
   }
 
   render() {
-    const { classes, avatar, nickname, redirectTO } = this.props
+    const { classes, avatar, nickname, redirectTO, location } = this.props
     const { anchorEl, completed } = this.state
+    const path = location.pathname
+
     return (
       <div className={classes.root}>
-
+      {redirectTO && redirectTO!=='/' ? <Redirect to={redirectTO} /> : null}
         <AppBar position="fixed" color="inherit">
-          <Toolbar style={{ minHeight: 80, }}>
-            <Typography variant="title" color="inherit">
-              <Link to='/'>
-                <WbAuto
-                  className={classes.logo}
-                  color="primary"
-                />
-              </Link>
+          <Toolbar style={{ height: 80, }}>
 
-            </Typography>
-            <SearchBar
-              onChange={() => console.log('onChange')}
-              onRequestSearch={() => console.log('onRequestSearch')}
-              style={{
-                marginLeft: 40,
-                maxWidth: 220,
-                borderRadius: 21,
-                marginRight: 165,
-              }} />
+            <Grid container spacing={24}>
 
-            {/* 导航栏 */}
-            <Link to="/" style={{ textDecoration: 'none' }}>
-              <Button className={classes.nav} color='primary'>首页</Button>
-            </Link>
-            <Link to="/featuresPage" style={{ textDecoration: 'none' }}>
-              <Button className={classes.nav} color='primary'>热门</Button>
-            </Link>
-            <Link to="/node" style={{ textDecoration: 'none' }}>
-              <Button className={classes.nav} color='primary' style={{ marginRight: 110 }}>私信</Button>
-            </Link>
-            {/* <Link to="/timeLine" style={{textDecoration:'none'}}>
-            <Button className={classes.nav} color='primary' style={{marginRight:110}}>timeLine</Button>        
-            </Link> */}
+              <Grid item xs={4} className={classes.grid}>
+                <Typography variant="title" color="inherit">
+                  <Link to='/'>
+                    <WbAuto
+                      className={classes.logo}
+                      color="primary"
+                    />
+                  </Link>
 
-            {/* 功能按钮 */}
-
-
-            <div>
-              <Tooltip title="评论" placement="bottom">
-                <SpeakerNotes className={classes.icon} style={{ color: '#63BD70' }} />
-              </Tooltip>
-              <Tooltip title="通知" placement="bottom">
-                <Notifications className={classes.icon} style={{ color: '#FBAB4A' }} />
-              </Tooltip>
-              <Tooltip title="添加好友" placement="bottom">
-                <PersonAdd className={classes.icon} style={{ color: '#CD7FE2', marginRight: '80px' }} />
-              </Tooltip>
-            </div>
-
-
-
-            {this.props.isAuth ?
-              <Tooltip title="个人资料与账号" placement="bottom-end">
-                <View className={classes.row}>
-                  <Avatar
-                    alt={this.props.nickname}
-                    src={avatar ? avatar : null}
-                    className={classes.avatar}
-                    onClick={this.handleClick}
-                  >
-                    {avatar ? null : nickname[0]}
-                  </Avatar>
-                </View>
-              </Tooltip> :
-              <View style={{ flexDirection: "row" }}>
-                <Link to="/login" style={{ textDecoration: 'none' }}>
-                  <Typography className={classes.login}>登录</Typography>
+                </Typography>
+                <SearchBar
+                  onChange={() => console.log('onChange')}
+                  onRequestSearch={() => console.log('onRequestSearch')}
+                  style={{
+                    marginLeft: 40,
+                    maxWidth: 220,
+                    borderRadius: 21,
+                  }} />
+              </Grid>
+              <Grid item xs={5} className={classes.grid}>
+                {/* 导航栏 */}
+                <Link to="/" style={{ textDecoration: 'none' }}>
+                  <Button className={classes.nav} color='primary'>首页</Button>
                 </Link>
-                <Link to="/register" style={{ textDecoration: 'none' }}>
-                  <Typography className={classes.login}>注册</Typography>
+                <Link to="/featuresPage" style={{ textDecoration: 'none' }}>
+                  <Button className={classes.nav} color='primary'>热门</Button>
                 </Link>
+                <Link to="/node" style={{ textDecoration: 'none' }}>
+                  <Button className={classes.nav} color='primary'>私信</Button>
+                </Link>
+              </Grid>
+              <Grid item xs={3} className={classes.grid}>
+                {/* 功能按钮 */}
+                <Tooltip title="评论" placement="bottom" className={classes.grid} >
+                  <SpeakerNotes className={classes.icon} style={{ color: '#63BD70' }} />
+                </Tooltip>
+                <Tooltip title="通知" placement="bottom" className={classes.grid}>
+                  <Notifications className={classes.icon} style={{ color: '#FBAB4A' }} />
+                </Tooltip>
+                <Tooltip title="添加好友" placement="bottom" className={classes.grid}>
+                  <PersonAdd className={classes.icon} style={{ color: '#CD7FE2', marginRight: '50px' }} />
+                </Tooltip>
+                {this.props.isAuth ?
+                  <Tooltip title="个人资料与账号" placement="bottom-end">
+                    <View className={classes.row}>
+                      <Avatar
+                        alt={this.props.nickname}
+                        src={avatar ? avatar : null}
+                        className={classes.avatar}
+                        onClick={this.handleClick}
+                      >
+                        {avatar ? null : nickname[0]}
+                      </Avatar>
+                    </View>
+                  </Tooltip> :
+                  <View style={{ flexDirection: "row" }}>
+                    <Link to="/login" style={{ textDecoration: 'none' }}>
+                      <Typography className={classes.login} style={{ marginRight: '30px' }}>登录</Typography>
+                    </Link>
+                    <Link to="/register" style={{ textDecoration: 'none' }}>
+                      <Typography className={classes.login}>注册</Typography>
+                    </Link>
 
-              </View>
-            }
+                  </View>
+                }
+              </Grid>
+
+            </Grid>
+
+
+
+
+
+
+
+
+
             <Menu
               id="simple-menu"
               anchorEl={anchorEl}
@@ -252,7 +263,7 @@ class NavBar extends React.Component {
           {this.state.loading ?
             <LinearProgress color='primary' style={{ background: '#eee' }} />
             :
-            
+
             this.props.children
           }
 

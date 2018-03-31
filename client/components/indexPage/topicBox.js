@@ -29,26 +29,27 @@ const styles = theme => ({
 })
 class TopicBox extends React.Component {
   constructor(props) {
-    super()
+    super(props)
   }
 
   render() {
-    const { classes, list } = this.props
+    const { classes } = this.props
+    const {postList} =this.props.post
     return (
       <Paper className={classes.paper} elevation={1}>
         <Typography variant="title" style={{ fontSize: "18px", fontWeight: '900' }}>
           热门话题
         </Typography>
         {
-          list.map((item, index) => {
+          postList.map((item, index) => {
             return (
-              <div className={classes.box} key={item.name}>
+              <div className={classes.box} key={item._id}>
                 <View>
                   <Typography variant="body2" className={classes.tag}>
-                    {item.tag}
+                    {`#${item.postTitle}`}
                   </Typography>
                   <Typography style={{ fontSize: '12px', color: '#808080' }}>
-                    18人看过
+                 {`${item.viewCount}人看过`}  
               </Typography>
                 </View>
               </div>

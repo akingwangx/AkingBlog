@@ -27,7 +27,7 @@ const styles = {
   },
   background: {
     width: "100%",
-    height: "734px",
+    height: "100%",
     position: "relative"
   },
   login: {
@@ -90,11 +90,12 @@ class Login extends React.Component {
     })
   }
   render() {
-    const { classes,msg,redirectTO } = this.props
+    const { classes,msg,redirectTO,location } = this.props
     const {user,password}=this.state
+
     return (
       <View className={classes.container}>
-      {redirectTO? <Redirect to={redirectTO}/>:null}
+      {redirectTO && redirectTO!=='/login'? <Redirect to={redirectTO}/>:null}
         <Reboot></Reboot>
         <svg className={classes.background} jsname="BUfzDd" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 810" preserveAspectRatio="xMinYMin slice" aria-hidden="true">
           <path fill="#efefee" d="M592.66 0c-15 64.092-30.7 125.285-46.598 183.777C634.056 325.56 748.348 550.932 819.642 809.5h419.672C1184.518 593.727 1083.124 290.064 902.637 0H592.66z"></path>

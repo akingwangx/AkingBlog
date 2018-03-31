@@ -5,6 +5,7 @@ const ERROR_MSG = 'ERROR_MSG'              //错误信息
 const LOAD_DATA = 'LOAD_DATA'                //登录信息
 const LOGOUT_SUBMIT = 'LOGOUT_SUBMIT'        //注销
 const CHANGE_IMG = 'CHANGE_IMG'              //修改头像
+const GETOUTHERUSERINFO = 'GETOUTHERUSERINFO'  //获取除了自己的其他用户列表
 const initState = {
   msg: '',
   user: '',
@@ -13,7 +14,8 @@ const initState = {
   avatar: '',
   isAuth: false,
   createdate: '',
-  isLoading:true,
+  isLoading: true,
+  outherUserList: [],
 }
 export function user(state = initState, action) {
   switch (action.type) {
@@ -22,11 +24,13 @@ export function user(state = initState, action) {
     case LOGIN_SUCCESS:
       return { ...state, msg: '', isAuth: true, redirectTO: '/', ...action.payload }
     case LOAD_DATA:
-      return { ...state, isAuth: true,isLoading:false, ...action.payload }
+      return { ...state, isAuth: true, redirectTo: '', isLoading: false, ...action.payload }
     case LOGOUT_SUBMIT:
       return { ...state, redirectTO: '/login' }
     case CHANGE_IMG:
-      return { ...state, avatar:action.avatar}
+      return { ...state, avatar: action.avatar }
+    case GETOUTHERUSERINFO:
+      return { ...state, outherUserList: action.outherUserList }
     case ERROR_MSG:
       return { ...state, msg: action.msg }
     default:
@@ -45,18 +49,15 @@ function loginSuccess(data) {
 function loadData(data) {
   return { type: LOAD_DATA, payload: data }
 }
-
 function changeImg(img) {
-  return {
-      type: CHANGE_IMG ,
-      avatar:img
-    }
-    
-  }
+  return { type: CHANGE_IMG, avatar: img }
+}
 export function logoutSubmit() {
   return { type: LOGOUT_SUBMIT }
 }
-
+function getOutherUserInfoSuccess(data) {
+  return { type: GETOUTHERUSERINFO, outherUserList: data }
+}
 
 
 export function register({ user, nickname, password, apassword }) {
@@ -120,26 +121,37 @@ export function userinfo() {
       })
   }
 }
-export function uploadImg(img,{user}){
-  return dispatch=>{
-   var $Blob=getBlobBydataURI(img,'image/jpeg')
-   var formData = new FormData()
-   formData.append('file',$Blob,'file_'+Date.parse(new Date())+".png")
+export function getOutherUserInfo(user) {
+  return dispatch => {
+    axios.get(`/api/user/outheruserinfo?user=${user}`).
+      then(res => {
+        if (res.status == 200 && res.data.code === 0) {
+          dispatch(getOutherUserInfoSuccess(res.data.data))
 
-    axios.post('/api/user/upload',formData,{user}).
-    then(res=>{
-      if(res.status==200){
-        dispatch(changeImg( res.data.file))
-      }
-    })
+        }
+      })
+  }
+}
+export function uploadImg(img, { user }) {
+  return dispatch => {
+    var $Blob = getBlobBydataURI(img, 'image/jpeg')
+    var formData = new FormData()
+    formData.append('file', $Blob, 'file_' + Date.parse(new Date()) + ".png")
+
+    axios.post('/api/user/upload', formData, { user }).
+      then(res => {
+        if (res.status == 200) {
+          dispatch(changeImg(res.data.file))
+        }
+      })
   }
 }
 //将base64位转成blob
-function getBlobBydataURI(dataURI,type){
-  var binary=atob(dataURI.split(',')[1])
-  var array=[]
-  for(var i=0;i<binary.length;i++){
+function getBlobBydataURI(dataURI, type) {
+  var binary = atob(dataURI.split(',')[1])
+  var array = []
+  for (var i = 0; i < binary.length; i++) {
     array.push(binary.charCodeAt(i))
   }
-  return new Blob([new Uint8Array(array)],{type:type})
+  return new Blob([new Uint8Array(array)], { type: type })
 }

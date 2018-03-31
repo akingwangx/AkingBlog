@@ -21,7 +21,6 @@ const styles = theme => ({
     position: 'relative',
   },
   header: {
-    width: '100%',
     height: '160px',
     background: '#4FC3F7',
   },
@@ -90,7 +89,7 @@ class Header extends React.Component {
   handleSave = data => {
     const img = this.editor.getImageScaledToCanvas().toDataURL()
     const rect = this.editor.getCroppingRect()
-    this.props.uploadImg(img, { user: this.props.user })
+    this.props.uploadImg(img, { user: this.props.user.user })
     this.setState({ open: false })
 
   }
@@ -103,7 +102,8 @@ class Header extends React.Component {
   }
 
   render() {
-    const { classes, avatar, nickname, user, createdate } = this.props
+    const { classes} = this.props
+    const { avatar, nickname, user, createdate }=this.props.user
     return (
       <Paper className={classes.paper} elevation={1}>
         <View className={classes.header} > 
@@ -135,7 +135,7 @@ class Header extends React.Component {
                   onPositionChange={this.handlePositionChange}
                   border={80}
                   borderRadius={100}
-                  color={[255, 255, 255, 0.3]} // RGBA
+                  color={[0, 0, 0, 0.8]} // RGBA
                   image={this.state.image}
                   scale={1}
                   crossOrigin="anonymous"
@@ -164,7 +164,7 @@ class Header extends React.Component {
                   文章
                       </span>
                 <span >
-                  0
+                  {this.props.post.userPostList.length}
                       </span>
               </View>
               <View className={classes.data}>

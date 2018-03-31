@@ -2,7 +2,8 @@ import React from 'react'
 import { withStyles } from 'material-ui/styles'
 import { View } from 'react-web-dom'
 import { connect } from 'react-redux'
-import { userinfo, uploadImg } from '../redux/user/user.redux'
+import { userinfo, uploadImg,getOutherUserInfo} from '../redux/user/user.redux'
+import {getUserPostList,getPost,getAllPost} from '../redux/post/post.redux'
 import Avatar from 'material-ui/Avatar'
 import Typography from 'material-ui/Typography'
 import Button from 'material-ui/Button'
@@ -25,39 +26,11 @@ import { UploadField, Uploader } from '@navjobs/upload'
 import UserInfo from '../components/userinfoPage/userinfo'
 import ArticleInfo from '../components/userinfoPage/articleinfo'
 import Header from '../components/userinfoPage/userinfoHeader'
-const list = [
-  {
-    name: '王鑫',
-    avatar: 'https://cdn.v2ex.com/avatar/9e33/4886/34829_normal.png?m=1361709603',
-    intro: ' Paper can be used to builds',
-    title: 'Grayson Allen',
-    article: 'I was taking a walk around my neighborhood, smoking a cigarette and crossed the street. When I was in the middle of the crosswalk, I heard brakes lock up and a small car slammed into me. I was pretty strong, a commercial fisherman, and not really hurt. A young woman stuck her head out the window. She h',
-    tag: '#Grayson Allen',
-    time: 'September 24, 2014',
 
-  },
-  {
-    name: '薛亚楠',
-    avatar: 'https://pbs.twimg.com/profile_images/960983398964633600/p3KxcEnU_bigger.jpg',
-    intro: ' 123',
-    title: 'React 深入系列2：组件分类',
-    article: '浅谈推进有赞全站 HTTPS 项目-工程篇浅谈推进有赞全站 HTTPS 项目-工程篇浅谈推进有赞全站 HTTPS 项目-工程篇浅谈推进有赞全站 HTTPS 项目-工程篇浅谈推进有赞全站 HTTPS 项目-工程篇',
-    tag: 'Dyke',
-    time: 'March 10, 2018',
-
-  },
-  {
-    name: '张三',
-    avatar: 'https://pbs.twimg.com/profile_images/672221256419115008/L9y0yHvE_bigger.jpg',
-    intro: ' 哈哈哈哈哈',
-    title: 'React 深入系列2：组件分类',
-    article: '浅谈推进有赞全站 HTTPS 项目-工程篇',
-    tag: '#Francisco Gabriel de Anda',
-    time: 'October 14, 2016',
-
-  }
-]
-
+@connect(
+  state=>state,
+  {userinfo, uploadImg,getUserPostList,getPost,getAllPost,getOutherUserInfo}
+)
 class UserInfoPage extends React.Component {
   constructor(props) {
     super(props)
@@ -74,6 +47,9 @@ class UserInfoPage extends React.Component {
 
   componentDidMount = () => {
     this.props.userinfo()
+    this.props.getUserPostList(this.props.user._id)
+    this.props.getAllPost()
+    this.props.getOutherUserInfo(this.props.user.user)
   }
 
 
@@ -104,20 +80,20 @@ class UserInfoPage extends React.Component {
           alignItems='flex-start'
           direction='row'
           justify='space-around'
-          style={{background: '#e6ecf0',minHeight:900}}
+          style={{background: '#e6ecf0'}}
         >
           <Grid item xs={12} sm={12} >
             <Header {...this.props}/>
           </Grid>
-          <Grid item xs={12} sm={3} style={{marginTop:'-100px'}}>
+          <Grid item xs={12} sm={3} style={{marginTop:'15px'}}>
           <UserInfo {...this.props}/>
           </Grid>
-          <Grid item xs={12} sm={5} style={{marginTop:'-100px'}}>
+          <Grid item xs={12} sm={5} style={{marginTop:'15px'}}>
           <ArticleInfo {...this.props}/>
           </Grid>
-          <Grid item xs={12} sm={3} style={{marginTop:'-100px'}}>
-            <TopicBox {...this.props} list={list} />
-            <AttentionBox {...this.props} list={list} />
+          <Grid item xs={12} sm={3}>
+            <TopicBox {...this.props} />
+            <AttentionBox {...this.props} />
           </Grid>
 
         </Grid>
@@ -126,8 +102,5 @@ class UserInfoPage extends React.Component {
     )
   }
 }
-const mapStateToProps = state => {
-  return state.user
 
-}
-export default connect(mapStateToProps, { userinfo, uploadImg })(UserInfoPage)
+export default UserInfoPage

@@ -6,6 +6,7 @@ import Avatar from 'material-ui/Avatar'
 import Typography from 'material-ui/Typography'
 import Button from 'material-ui/Button'
 
+
 const styles = theme => ({
   paper: {
     padding: theme.spacing.unit * 2,
@@ -63,9 +64,17 @@ const styles = theme => ({
   },
 
 })
+
 class UserCard extends React.Component {
+  constructor(props){
+    super(props)
+  }
+  componentDidMount=()=>{
+     this.props.getUserPostList(this.props.user._id)
+  }
   render() {
-    const { classes, avatar, history } = this.props
+    const { classes, history } = this.props
+    const { avatar,nickname} =this.props.user
     return (
       <Paper className={classes.paper} elevation={1}>
         <View className={classes.header} ></View>
@@ -86,7 +95,7 @@ class UserCard extends React.Component {
               history.push('/userinfo')
             }}
           >
-            {this.props.nickname}
+            {nickname}
           </Typography>
           <View style={{ flexDirection: 'row', marginTop: '20px', justifyContent: 'space-between' }}>
             <View style={{ flexDirection: 'row', }}>
@@ -95,7 +104,7 @@ class UserCard extends React.Component {
                   文章
               </Typography>
                 <Typography color="primary" style={{ fontWeight: 'bold' }}>
-                  0
+                  {this.props.post.userPostList.length}
               </Typography>
               </View>
               <View className={classes.data}>

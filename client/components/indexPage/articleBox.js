@@ -15,6 +15,7 @@ import AppBar from 'material-ui/AppBar'
 import {getPost} from '../../redux/post/post.redux'
 import {connect} from 'react-redux'
 import { Redirect } from 'react-router-dom'
+import { CircularProgress } from 'material-ui/Progress'
 const styles = theme => ({
   root: {
     '&:first-child': {
@@ -103,6 +104,7 @@ class ArticleBox extends React.Component {
     super(props)
     this.state = {
       value: 0,
+      isloading:true,
     }
   }
   handleChange = (event, value) => {
@@ -111,8 +113,15 @@ class ArticleBox extends React.Component {
   handleClick=(item)=>{
     this.props.getPost(item._id)
   }
+  componentDidMount=()=>{
+    setTimeout(() => {
+      this.setState({
+        isloading: false,
+      })
+    }, 500)
+  }
   render() {
-    const { classes, list,postList,redirectTO} = this.props
+    const { classes,postList,redirectTO} = this.props
     const { value } = this.state
     const articleList =
       postList.map((item, index) => {
@@ -151,7 +160,7 @@ class ArticleBox extends React.Component {
                 </View>
                 <View className={classes.iconHover2} style={{ flexDirection: 'row' }}>
                   <Textsms className={classes.icon}></Textsms>
-                  <Typography style={{ marginRight: '25px', color: '#7d7e7e' }}>12</Typography>
+                  <Typography style={{ marginRight: '25px', color: '#7d7e7e' }}>{item.comments.length}</Typography>
                 </View>
                 <View className={classes.iconHover3} style={{ flexDirection: 'row' }}>
                   <Whatshot className={classes.icon}></Whatshot>
@@ -178,10 +187,14 @@ class ArticleBox extends React.Component {
             <Tab style={{ fontWeight: 'bold' }} label='精选'></Tab>
           </Tabs>
         </AppBar>
-        {         
-          articleList  
-        }
-       
+        {
+          this.state.isloading?
+        <View style={{flexDirection:'row',justifyContent:'center',marginTop:'20px'}}>
+        <CircularProgress size={50} thickness={7}/>
+        </View>
+        :
+        articleList}  
+        
       </div>
 
 
