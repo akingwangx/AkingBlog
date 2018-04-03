@@ -50,6 +50,9 @@ express+mongodb，可快速构建 node 后端服务
 )
 
 
+不太清楚为啥动一半卡主了,图片链接:http://ovwvaynot.bkt.clouddn.com/%E8%A3%81%E5%89%AA%E5%A4%B4%E5%83%8F%E5%8A%9F%E8%83%BD.gif
+
+
 
 
 
