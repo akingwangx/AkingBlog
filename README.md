@@ -46,7 +46,7 @@ express+mongodb，可快速构建 node 后端服务
 ![](http://ovwvaynot.bkt.clouddn.com/%E6%96%87%E7%AB%A0%E9%A1%B5.png)
 
 登录与裁剪头像功能
-![](http://ovwvaynot.bkt.clouddn.com/12.gif
+![](http://ovwvaynot.bkt.clouddn.com/%E8%A3%81%E5%89%AA%E5%A4%B4%E5%83%8F%E5%8A%9F%E8%83%BD.gif
 )
 
 
