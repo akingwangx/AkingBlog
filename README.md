@@ -7,6 +7,7 @@ AkingBlog是一个基于react+react-redux+material-ui技术栈开发的，从零
 ( 开源重点在于技术分享和交流，如果觉得可以，右上角点颗星星喔~ )
 
 技术选型
+
 前端:
 webpack3, react ,react-router,  react-redux , material-ui, axios, es6, babel
 后端:
@@ -26,7 +27,8 @@ react前沿技术栈，组件化、高性能的工程化开发模式
 express+mongodb，可快速构建 node 后端服务
 
 
-未来规划
+未来规划:
+
 在现有基础上，陆续推出更多的功能
 
 尝试按功能模块拆分打包，做更精细的优化
