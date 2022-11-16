@@ -64,7 +64,7 @@
     "eslint-config-airbnb": "^16.1.0",
     "eslint-config-standard": "^11.0.0-beta.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
-    "html-webpack-plugin": "^2.30.1",
+    "html-webpack-plugin": "^5.5.0",
     "http-proxy-middleware": "^0.17.4",
     "memory-fs": "^0.4.1",
     "react-hot-loader": "^4.0.0-beta.21",
